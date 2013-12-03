@@ -37,16 +37,15 @@ repositories {
 // In this section you declare the dependencies for your production and test code
 dependencies {
     compile gradleApi()
-    // We use the latest groovy 2.x version for building this library
-    compile 'org.codehaus.groovy:groovy:2.1.7'
+    compile localGroovy()
 
     // We use the awesome Spock testing and specification framework
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
     testCompile 'junit:junit:4.11'
 }
 
 sourceCompatibility = 1.7
-targetCompatibility = 1.6
+targetCompatibility = 1.7
 
 def javaApiUrl = 'http://docs.oracle.com/javase/1.7.0/docs/api'
 def groovyApiUrl = 'http://groovy.codehaus.org/gapi/'
