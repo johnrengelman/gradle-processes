@@ -15,9 +15,15 @@ import java.util.Map;
 public class ExecHandleWrapper implements ProcessHandle {
 
     private final ExecHandle execHandle;
+    private final boolean ignoreExitValue;
 
     public ExecHandleWrapper(ExecHandle execHandle) {
+        this(execHandle, false);
+    }
+
+    public ExecHandleWrapper(ExecHandle execHandle, boolean ignoreExitValue) {
         this.execHandle = execHandle;
+        this.ignoreExitValue = ignoreExitValue;
     }
 
     @Override
@@ -52,11 +58,14 @@ public class ExecHandleWrapper implements ProcessHandle {
 
     @Override
     public boolean isIgnoreExitValue() {
-        //TODO need to implement this
-        return false;
+        return ignoreExitValue;
     }
 
     public static ProcessHandle wrap(ExecHandle execHandle) {
         return new ExecHandleWrapper(execHandle);
+    }
+
+    public static ProcessHandle wrap(ExecHandle execHandle, boolean ignoreExitValue) {
+        return new ExecHandleWrapper(execHandle, ignoreExitValue);
     }
 }

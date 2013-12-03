@@ -16,6 +16,6 @@ public class DefaultForkAction extends ExecHandleBuilder implements ForkAction {
 
     public ProcessHandle fork() throws ExecException {
         ExecHandle execHandle = build();
-        return wrap(execHandle.start());
+        return wrap(execHandle.start(), isIgnoreExitValue());
     }
 }

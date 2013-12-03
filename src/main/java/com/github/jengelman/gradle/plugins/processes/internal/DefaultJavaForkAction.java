@@ -15,6 +15,6 @@ public class DefaultJavaForkAction extends JavaExecHandleBuilder implements Java
 
     public ProcessHandle fork() {
         ExecHandle execHandle = build();
-        return wrap(execHandle.start());
+        return wrap(execHandle.start(), isIgnoreExitValue());
     }
 }
