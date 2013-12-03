@@ -32,7 +32,7 @@ class ProcessesPluginSpec extends Specification {
 
     def 'extension implements async operations interface'() {
         expect:
-        def ext = project.extensions.getByType(ProcessesPlugin)
+        def ext = project.extensions.getByType(ProcessesExtension)
         assert ext instanceof NonBlockingProcessApi
     }
 
@@ -42,7 +42,7 @@ class ProcessesPluginSpec extends Specification {
         List files = ClasspathUtil.getClasspath(getClass().classLoader)
 
         when:
-        ProcessHandle process = project.proc.javafork {
+        ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
             main = 'org.gradle.api.plugins.SomeMain'
             args testFile.absolutePath
@@ -52,7 +52,7 @@ class ProcessesPluginSpec extends Specification {
         process.state != null
 
         when:
-        ExecResult result = project.proc.waitForFinish(process)
+        ExecResult result = project.procs.waitForFinish(process)
 
         then:
         testFile.isFile()
@@ -62,7 +62,7 @@ class ProcessesPluginSpec extends Specification {
     def 'forked java process with ignored exit value should not throw exception'() {
         when:
         project.plugins.apply(ProcessesPlugin)
-        ProcessHandle process = project.proc.javafork {
+        ProcessHandle process = project.procs.javafork {
             main = 'org.gradle.UnknownMain'
             ignoreExitValue = true
         }
@@ -71,7 +71,7 @@ class ProcessesPluginSpec extends Specification {
         assert process != null
 
         when:
-        ExecResult result = project.proc.waitForFinish(process)
+        ExecResult result = project.procs.waitForFinish(process)
 
         then:
         assert result.exitValue != 0
@@ -79,7 +79,7 @@ class ProcessesPluginSpec extends Specification {
 
     def 'forked java process  should throw exception'() {
         when:
-        ProcessHandle process = project.proc.javafork {
+        ProcessHandle process = project.procs.javafork {
             main = 'org.gradle.UnknownMain'
         }
 
@@ -100,12 +100,12 @@ class ProcessesPluginSpec extends Specification {
         List files = ClasspathUtil.getClasspath(getClass().classLoader)
 
         when:
-        ProcessHandle process = project.proc.javafork {
+        ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
             main = 'org.gradle.api.plugins.SomeMain'
             args testFile.absolutePath
         }
-        ProcessHandle process2 = project.proc.javafork {
+        ProcessHandle process2 = project.procs.javafork {
             classpath(files as Object[])
             main = 'org.gradle.api.plugins.SomeMain'
             args testFile2.absolutePath
@@ -116,7 +116,7 @@ class ProcessesPluginSpec extends Specification {
         assert process2.state != null
 
         when:
-        List<ExecResult> results = project.proc.waitForFinish([process, process2])
+        List<ExecResult> results = project.procs.waitForFinish([process, process2])
 
         then:
         assert testFile.isFile()
@@ -132,12 +132,12 @@ class ProcessesPluginSpec extends Specification {
         List files = ClasspathUtil.getClasspath(getClass().classLoader)
 
         when:
-        ProcessHandle process = project.proc.javafork {
+        ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
             main = 'org.gradle.api.plugins.SomeMain'
             args testFile.absolutePath
         }
-        ProcessHandle process2 = project.proc.javafork {
+        ProcessHandle process2 = project.procs.javafork {
             main = 'org.gradle.UnknownMain'
             ignoreExitValue = true
         }
@@ -147,7 +147,7 @@ class ProcessesPluginSpec extends Specification {
         assert process2.state != null
 
         when:
-        List<ExecResult> results = project.proc.waitForFinish([process, process2])
+        List<ExecResult> results = project.procs.waitForFinish([process, process2])
 
         then:
         assert testFile.isFile()
