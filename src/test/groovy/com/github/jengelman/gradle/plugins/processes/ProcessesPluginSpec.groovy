@@ -1,6 +1,6 @@
 package com.github.jengelman.gradle.plugins.processes
 
-import com.github.jengelman.gradle.plugins.processes.internal.NonBlockingProcessApi
+import com.github.jengelman.gradle.plugins.processes.internal.NonBlockingProcessOperations
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.internal.classloader.ClasspathUtil
@@ -32,7 +32,7 @@ class ProcessesPluginSpec extends Specification {
     def 'extension implements async operations interface'() {
         expect:
         def ext = project.extensions.getByType(ProcessesExtension)
-        assert ext instanceof NonBlockingProcessApi
+        assert ext instanceof NonBlockingProcessOperations
     }
 
     def 'fork a java process from the plugin extension'() {

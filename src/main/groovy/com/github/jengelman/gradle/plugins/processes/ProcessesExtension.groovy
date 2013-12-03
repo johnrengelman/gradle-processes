@@ -1,33 +1,32 @@
 package com.github.jengelman.gradle.plugins.processes
 
-import com.github.jengelman.gradle.plugins.processes.internal.NonBlockingProcessApi
 import org.gradle.process.ExecResult
 
-class ProcessesExtension implements NonBlockingProcessApi {
+class ProcessesExtension implements ProcessOperations {
 
-    ProcessApi processApi
+    ProcessOperations processOperations
 
-    ProcessesExtension(ProcessApi processApi) {
-        this.processApi = processApi
+    ProcessesExtension(ProcessOperations processApi) {
+        this.processOperations = processApi
     }
 
     @Override
     ProcessHandle javafork(Closure cl) {
-        return processApi.javafork(cl)
+        return processOperations.javafork(cl)
     }
 
     @Override
     ProcessHandle fork(Closure cl) {
-        return processApi.javafork(cl)
+        return processOperations.javafork(cl)
     }
 
     @Override
     ExecResult waitForFinish(ProcessHandle fork) {
-        return processApi.waitForFinish(fork)
+        return processOperations.waitForFinish(fork)
     }
 
     @Override
     List<ExecResult> waitForFinish(List<ProcessHandle> forks) {
-        return processApi.waitForFinish(forks)
+        return processOperations.waitForFinish(forks)
     }
 }

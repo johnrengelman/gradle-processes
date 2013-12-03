@@ -6,7 +6,7 @@ import org.gradle.process.ExecResult
 /**
  * Methods for interacting with processes in a non-blocking way.
  */
-public interface NonBlockingProcessApi {
+public interface NonBlockingProcessOperations {
 
     ProcessHandle javafork(Closure cl)
 

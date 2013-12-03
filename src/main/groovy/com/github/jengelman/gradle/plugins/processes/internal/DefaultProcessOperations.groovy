@@ -1,7 +1,7 @@
 package com.github.jengelman.gradle.plugins.processes.internal
 
 import com.github.jengelman.gradle.plugins.processes.MultipleProcessException
-import com.github.jengelman.gradle.plugins.processes.ProcessApi
+import com.github.jengelman.gradle.plugins.processes.ProcessOperations
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import org.gradle.api.internal.file.FileResolver
 import org.gradle.internal.reflect.Instantiator
@@ -9,12 +9,12 @@ import org.gradle.process.ExecResult
 import org.gradle.process.internal.ExecException
 import org.gradle.util.ConfigureUtil
 
-class DefaultProcessApi implements ProcessApi {
+class DefaultProcessOperations implements ProcessOperations {
 
     private final Instantiator instantiator
     private final FileResolver fileResolver
 
-    DefaultProcessApi(Instantiator instantiator, FileResolver fileResolver) {
+    DefaultProcessOperations(Instantiator instantiator, FileResolver fileResolver) {
         this.instantiator = instantiator
         this.fileResolver = fileResolver
     }
