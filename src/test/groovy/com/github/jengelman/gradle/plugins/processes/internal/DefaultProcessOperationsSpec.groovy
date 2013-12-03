@@ -4,7 +4,6 @@ import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import com.github.jengelman.gradle.plugins.processes.TestFiles
 import com.github.jengelman.gradle.plugins.processes.TestMain
 import com.github.jengelman.gradle.plugins.processes.TestNameTestDirectoryProvider
-import org.gradle.api.internal.file.FileResolver
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.internal.reflect.DirectInstantiator
 import org.gradle.internal.reflect.Instantiator
@@ -15,7 +14,6 @@ import spock.lang.Specification
 
 class DefaultProcessOperationsSpec extends Specification {
 
-    private final FileResolver resolver = Mock()
     private final Instantiator instantiator = new DirectInstantiator()
 
     private DefaultProcessOperations processOperations
