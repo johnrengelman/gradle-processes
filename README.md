@@ -29,5 +29,21 @@ Capabilities
 
 ### Process Forking
 
+    ProcessHandle handle = project.procs.fork {
+        <process configuration> See [Exec](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.Exec.html)
+    }
+
+    ProcessHandle handle = project.procs.javafork {
+        <process configuration> See [JavaExec](http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.JavaExec.html)
+    }
+
 ### Process Joining
+
+    project.procs.waitForFinish(handle)
+
+### Handling Multiple Processes
+
+    ProcessHandle handle = project.procs.javafork { ... }
+    ProcessHandle handle2 = project.procs.javafork { ... }
+    project.procs.waitForFinish([handle, handle2])
 
