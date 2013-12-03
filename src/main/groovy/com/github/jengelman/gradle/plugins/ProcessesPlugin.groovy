@@ -9,10 +9,12 @@ import org.gradle.api.Project
  * Allows processes to be executed in a blocking, synchronous fashion by waiting for their termination and exit value or
  * non-blocking asynchronous fashion by forking the process and later waiting for its termination.
  */
-class ProcessPlugin implements Plugin<Project> {
+class ProcessesPlugin implements Plugin<Project> {
+
+    static final String PROCESSES_EXTENSION = 'procs'
 
     @Override
     void apply(Project project) {
-
+        project.extensions.create(PROCESSES_EXTENSION, ProcessesExtension)
     }
 }
