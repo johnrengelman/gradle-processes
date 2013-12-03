@@ -21,6 +21,17 @@ class ProcessesPluginSpec extends Specification {
         project.plugins.apply(ProcessesPlugin)
     }
 
+    def 'apply plugin with name'() {
+        given:
+        project = ProjectBuilder.builder().build()
+
+        when:
+        project.plugins.apply('processes')
+
+        then:
+        assert project.plugins.hasPlugin(ProcessesPlugin)
+    }
+
     def "creates extension"() {
         expect:
         assert project.plugins.hasPlugin(ProcessesPlugin)
