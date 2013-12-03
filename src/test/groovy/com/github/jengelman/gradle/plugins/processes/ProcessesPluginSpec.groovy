@@ -1,7 +1,6 @@
-package com.github.jengelman.gradle.plugins
+package com.github.jengelman.gradle.plugins.processes
 
-import com.github.jengelman.gradle.plugins.processes.NonBlockingProcessApi
-import com.github.jengelman.gradle.plugins.processes.ProcessHandle
+import com.github.jengelman.gradle.plugins.processes.internal.NonBlockingProcessApi
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.internal.classloader.ClasspathUtil
@@ -44,7 +43,7 @@ class ProcessesPluginSpec extends Specification {
         when:
         ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
-            main = 'org.gradle.api.plugins.SomeMain'
+            main = 'com.github.jengelman.gradle.plugins.processes.SomeMain'
             args testFile.absolutePath
         }
 
@@ -87,7 +86,7 @@ class ProcessesPluginSpec extends Specification {
         assert process != null
 
         when:
-        project.proc.waitForFinish(process)
+        project.procs.waitForFinish(process)
 
         then:
         thrown(ExecException)
@@ -102,12 +101,12 @@ class ProcessesPluginSpec extends Specification {
         when:
         ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
-            main = 'org.gradle.api.plugins.SomeMain'
+            main = 'com.github.jengelman.gradle.plugins.processes.SomeMain'
             args testFile.absolutePath
         }
         ProcessHandle process2 = project.procs.javafork {
             classpath(files as Object[])
-            main = 'org.gradle.api.plugins.SomeMain'
+            main = 'com.github.jengelman.gradle.plugins.processes.SomeMain'
             args testFile2.absolutePath
         }
 
@@ -134,7 +133,7 @@ class ProcessesPluginSpec extends Specification {
         when:
         ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
-            main = 'org.gradle.api.plugins.SomeMain'
+            main = 'com.github.jengelman.gradle.plugins.processes.SomeMain'
             args testFile.absolutePath
         }
         ProcessHandle process2 = project.procs.javafork {

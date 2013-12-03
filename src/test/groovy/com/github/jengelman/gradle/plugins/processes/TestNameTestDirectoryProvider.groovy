@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jengelman.gradle.plugins;
+package com.github.jengelman.gradle.plugins.processes;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.rules.MethodRule;

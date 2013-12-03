@@ -1,9 +1,10 @@
-package com.github.jengelman.gradle.plugins
+package com.github.jengelman.gradle.plugins.processes
 
-import com.github.jengelman.gradle.plugins.processes.DefaultProcessApi
-import com.github.jengelman.gradle.plugins.processes.ProcessApi
+import com.github.jengelman.gradle.plugins.processes.internal.DefaultProcessApi
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.internal.file.FileResolver
+import org.gradle.internal.reflect.Instantiator
 
 import javax.inject.Inject
 
@@ -20,8 +21,8 @@ class ProcessesPlugin implements Plugin<Project> {
     ProcessApi processApi
 
     @Inject
-    ProcessesPlugin() {
-        processApi = new DefaultProcessApi()
+    ProcessesPlugin(Instantiator instantiator, FileResolver fileResolver) {
+        processApi = new DefaultProcessApi(instantiator, fileResolver)
     }
 
     @Override

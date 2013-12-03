@@ -1,8 +1,6 @@
-package com.github.jengelman.gradle.plugins
+package com.github.jengelman.gradle.plugins.processes
 
-import com.github.jengelman.gradle.plugins.processes.NonBlockingProcessApi
-import com.github.jengelman.gradle.plugins.processes.ProcessHandle
-import com.github.jengelman.gradle.plugins.processes.ProcessApi
+import com.github.jengelman.gradle.plugins.processes.internal.NonBlockingProcessApi
 import org.gradle.process.ExecResult
 
 class ProcessesExtension implements NonBlockingProcessApi {

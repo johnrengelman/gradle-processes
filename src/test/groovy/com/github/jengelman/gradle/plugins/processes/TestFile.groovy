@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.jengelman.gradle.plugins;
+package com.github.jengelman.gradle.plugins.processes;
 
 import groovy.lang.Closure;
 import org.apache.commons.io.FileUtils;
