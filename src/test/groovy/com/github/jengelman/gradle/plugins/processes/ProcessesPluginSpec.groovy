@@ -1,7 +1,6 @@
 package com.github.jengelman.gradle.plugins.processes
 
 import com.github.jengelman.gradle.plugins.processes.internal.NonBlockingProcessOperations
-import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.process.ExecResult
@@ -43,7 +42,7 @@ class ProcessesPluginSpec extends Specification {
         when:
         ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
-            main = 'com.github.jengelman.gradle.plugins.processes.SomeMain'
+            main = TestMain.class.name
             args testFile.absolutePath
         }
 
@@ -101,12 +100,12 @@ class ProcessesPluginSpec extends Specification {
         when:
         ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
-            main = 'com.github.jengelman.gradle.plugins.processes.SomeMain'
+            main = TestMain.class.name
             args testFile.absolutePath
         }
         ProcessHandle process2 = project.procs.javafork {
             classpath(files as Object[])
-            main = 'com.github.jengelman.gradle.plugins.processes.SomeMain'
+            main = TestMain.class.name
             args testFile2.absolutePath
         }
 
@@ -133,7 +132,7 @@ class ProcessesPluginSpec extends Specification {
         when:
         ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
-            main = 'com.github.jengelman.gradle.plugins.processes.SomeMain'
+            main = TestMain.class.name
             args testFile.absolutePath
         }
         ProcessHandle process2 = project.procs.javafork {
@@ -152,11 +151,5 @@ class ProcessesPluginSpec extends Specification {
         assert testFile.isFile()
         assert results[0].exitValue == 0
         assert results[1].exitValue != 0
-    }
-}
-
-class SomeMain {
-    static void main(String[] args) {
-        FileUtils.touch(new File(args[0]))
     }
 }
