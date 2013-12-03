@@ -100,8 +100,8 @@ publishing {
 }
 
 task configureBintray << {
-    bintray.user = bintrayUser
-    bintray.key = bintrayKey
+    bintrayUpload.user = bintrayUser
+    bintrayUpload.apiKey = bintrayKey
 }
 
 bintrayUpload.dependsOn configureBintray
