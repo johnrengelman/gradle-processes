@@ -114,7 +114,7 @@ public class TestFile extends File {
     }
 
     public TestFile withExtension(String extension) {
-        return getParentFile().file(getName().replaceAll("\\..*$", "." + extension));
+        return getParentFile().file(getName().replaceAll("\\..*\$", "." + extension));
     }
 
     public TestFile writelns(String... lines) {
@@ -140,7 +140,7 @@ public class TestFile extends File {
         }
     }
 
-    public TestFile[] listFiles() {
+    public File[] listFiles() {
         File[] children = super.listFiles();
         TestFile[] files = new TestFile[children.length];
         for (int i = 0; i < children.length; i++) {
@@ -508,7 +508,7 @@ public class TestFile extends File {
         tar.setBasedir(this);
         tar.setDestFile(tarFile);
         tar.setCompression((Tar.TarCompressionMethod) EnumeratedAttribute.getInstance(Tar.TarCompressionMethod.class, "gzip"));
-        execute(tar);
+        executeTask(tar);
         return this;
     }
 
@@ -517,11 +517,11 @@ public class TestFile extends File {
         tar.setBasedir(this);
         tar.setDestFile(tarFile);
         tar.setCompression((Tar.TarCompressionMethod) EnumeratedAttribute.getInstance(Tar.TarCompressionMethod.class, "bzip2"));
-        execute(tar);
+        executeTask(tar);
         return this;
     }
 
-    private void execute(Task task) {
+    private void executeTask(Task task) {
         task.setProject(new Project());
         task.execute();
     }

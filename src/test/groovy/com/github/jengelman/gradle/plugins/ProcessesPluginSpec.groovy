@@ -1,6 +1,7 @@
 package com.github.jengelman.gradle.plugins
 
 import com.github.jengelman.gradle.plugins.processes.NonBlockingProcessApi
+import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 import org.gradle.internal.classloader.ClasspathUtil
