@@ -14,31 +14,31 @@ public interface ProcessHandle {
 
     /**
      * The working directory of the process.
-     * @return
+     * @return File
      */
     File getDirectory();
 
     /**
      * The command to that is being executed by the process
-     * @return
+     * @return String command
      */
     String getCommand();
 
     /**
      * The arguments passed to the process
-     * @return
+     * @return String args as List
      */
     List<String> getArguments();
 
     /**
      * The configured environment for the process.
-     * @return
+     * @return Map of key/value String pairs for environment
      */
     Map<String, String> getEnvironment();
 
     /**
      * The current execution state of the process.
-     * @return
+     * @return execution state
      */
     ExecHandleState getState();
 

@@ -116,3 +116,5 @@ bintray {
 }
 
 task install(dependsOn: publishToMavenLocal)
+
+build.dependsOn javadocJar, sourcesJar
