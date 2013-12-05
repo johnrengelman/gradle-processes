@@ -6,6 +6,36 @@ Gradle Processes Plugin - Create and manage forked processes.
 This Gradle plugin provides the capability to create forked processes from a Gradle build. It's primary goal is to
 bolster the built in capabilities of Gradle which allow for processing forking only in a synchronous manner.
 
+Compatibility Notes
+-------------------
+
+Please note that this plugin relies on some internal Gradle core classes and APIs. As such, it has the potential
+for breaking compatibility between various Gradle versions. The table below will try to track those issues.
+
+**Key**
+* O => untested
+* + => compatible
+* - => non-compatbile
+
+<table>
+    <thead>
+        <tr>
+            <th>Plugin Version</th>
+            <th>Gradle pre-1.9</th>
+            <th>Gradle 1.9</th>
+            <th>Gradle 1.10-rc-1+</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>0.1</td>
+            <td>O</td>
+            <td>+</td>
+            <td>-</td>
+        </tr>
+    </tbody>
+</table>
+
 How To Use
 ----------
 
