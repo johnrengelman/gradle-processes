@@ -23,7 +23,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'idea'
 
 group = 'com.github.jengelman.gradle.plugins'
-version = '0.1'
+version = '0.2-SNAPSHOT'
 
 ext.isSnapshot = version.endsWith("SNAPSHOT")
 
