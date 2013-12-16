@@ -46,7 +46,7 @@ First, add the BinTray JCenter repository and the plugin library to your build's
            jcenter()
         }
         dependencies {
-           classpath 'com.github.jengelman.gradle.plugins:processes:0.1'
+           classpath 'com.github.jengelman.gradle.plugins:gradle-processes:0.1'
         }
     }
 
