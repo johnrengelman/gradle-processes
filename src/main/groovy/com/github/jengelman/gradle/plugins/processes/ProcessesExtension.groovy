@@ -17,7 +17,7 @@ class ProcessesExtension implements ProcessOperations {
 
     @Override
     ProcessHandle fork(Closure cl) {
-        return processOperations.javafork(cl)
+        return processOperations.fork(cl)
     }
 
     @Override
