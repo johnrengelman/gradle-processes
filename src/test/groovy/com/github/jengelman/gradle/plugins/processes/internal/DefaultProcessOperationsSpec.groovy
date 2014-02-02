@@ -4,6 +4,7 @@ import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import com.github.jengelman.gradle.plugins.processes.TestFiles
 import com.github.jengelman.gradle.plugins.processes.TestMain
 import com.github.jengelman.gradle.plugins.processes.TestNameTestDirectoryProvider
+import org.gradle.api.internal.file.DefaultFileOperations
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.internal.reflect.DirectInstantiator
 import org.gradle.internal.reflect.Instantiator
@@ -23,7 +24,7 @@ class DefaultProcessOperationsSpec extends Specification {
 
     def javafork() {
         File testFile = tmpDir.file("someFile")
-        processOperations = new DefaultProcessOperations(instantiator, resolver())
+        processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
         List files = ClasspathUtil.getClasspath(getClass().classLoader)
 
         when:
@@ -45,7 +46,7 @@ class DefaultProcessOperationsSpec extends Specification {
     }
 
     def javaforkWithNonZeroExitValueShouldThrowException() {
-        processOperations = new DefaultProcessOperations(instantiator, resolver())
+        processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
 
         when:
         ProcessHandle process = processOperations.javafork {
@@ -66,7 +67,7 @@ class DefaultProcessOperationsSpec extends Specification {
     }
 
     def javaforkWithNonZeroExitValueAndIgnoreExitValueShouldNotThrowException() {
-        processOperations = new DefaultProcessOperations(instantiator, resolver())
+        processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
 
         when:
         ProcessHandle process = processOperations.javafork {
@@ -86,5 +87,9 @@ class DefaultProcessOperationsSpec extends Specification {
 
     def resolver() {
         return TestFiles.resolver(tmpDir.testDirectory)
+    }
+
+    private DefaultFileOperations fileOps() {
+        new DefaultFileOperations(resolver(), null, null, instantiator)
     }
 }

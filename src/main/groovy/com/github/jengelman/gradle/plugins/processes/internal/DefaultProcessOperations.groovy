@@ -4,6 +4,7 @@ import com.github.jengelman.gradle.plugins.processes.MultipleProcessException
 import com.github.jengelman.gradle.plugins.processes.ProcessOperations
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import org.gradle.api.internal.file.FileResolver
+import org.gradle.api.internal.ProcessOperations as GradleProcessOperations
 import org.gradle.internal.reflect.Instantiator
 import org.gradle.process.ExecResult
 import org.gradle.process.internal.ExecException
@@ -13,10 +14,16 @@ class DefaultProcessOperations implements ProcessOperations {
 
     private final Instantiator instantiator
     private final FileResolver fileResolver
+    private final GradleProcessOperations processOperations
 
-    DefaultProcessOperations(Instantiator instantiator, FileResolver fileResolver) {
+    DefaultProcessOperations(Instantiator instantiator, FileResolver fileResolver,
+                             GradleProcessOperations processOperations) {
+        assert instantiator
+        assert fileResolver
+        assert processOperations
         this.instantiator = instantiator
         this.fileResolver = fileResolver
+        this.processOperations = processOperations
     }
 
     @Override
@@ -56,5 +63,15 @@ class DefaultProcessOperations implements ProcessOperations {
             throw new MultipleProcessException(throwables)
         }
         return results
+    }
+
+    @Override
+    ExecResult javaexec(Closure closure) {
+        return processOperations.javaexec(closure)
+    }
+
+    @Override
+    ExecResult exec(Closure closure) {
+        return processOperations.exec(closure)
     }
 }
