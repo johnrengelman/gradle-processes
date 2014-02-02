@@ -33,6 +33,12 @@ for breaking compatibility between various Gradle versions. The table below will
             <td>+</td>
             <td>-</td>
         </tr>
+        <tr>
+            <td>0.2</td>
+            <td>0</td>
+            <td>+</td>
+            <td>+</td>
+        </tr>
     </tbody>
 </table>
 

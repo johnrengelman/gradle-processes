@@ -1,6 +1,6 @@
 package com.github.jengelman.gradle.plugins.processes
 
-import org.gradle.api.internal.AbstractMultiCauseException
+import com.github.jengelman.gradle.plugins.processes.internal.AbstractMultiCauseException
 
 /**
  * Exception that wraps exceptions from multiple forked processes.
