@@ -16,11 +16,7 @@ buildscript {
     }
 }
 
-// Apply the groovy plugin to add support for Groovy
 apply plugin: 'groovy'
-apply plugin: 'bintray'
-apply plugin: 'maven-publish'
-apply plugin: 'idea'
 apply from: file('gradle/codenarc.gradle')
 
 group = 'com.github.jengelman.gradle.plugins'
@@ -28,94 +24,23 @@ version = '0.2-SNAPSHOT'
 
 ext.isSnapshot = version.endsWith("SNAPSHOT")
 
-// In this section you declare where to find the dependencies of your project
 repositories {
-    // Use 'maven central' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
 
-// In this section you declare the dependencies for your production and test code
 dependencies {
     compile gradleApi()
     compile localGroovy()
 
-    // We use the awesome Spock testing and specification framework
     testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
     testCompile 'junit:junit:4.11'
     testCompile 'org.hamcrest:hamcrest-core:1.3'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
-def javaApiUrl = 'http://docs.oracle.com/javase/1.7.0/docs/api'
-def groovyApiUrl = 'http://groovy.codehaus.org/gapi/'
-
-tasks.withType(Javadoc) {
-    options.links(javaApiUrl, groovyApiUrl)
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-def pomConfig = {
-    licenses {
-        license {
-            name 'The Apache Software License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-            distribution 'repo'
-        }
-    }
-    developers {
-        developer {
-            id 'jengelman'
-            name 'John Engelman'
-            email 'john.r.engelman@gmail.com'
-        }
-    }
-}
-
-publishing {
-    publications {
-        plugin(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
-
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', 'A gradle plugin to create and manage processes')
-                root.children().last() + pomConfig
-            }
-        }
-    }
-}
-
-task configureBintray << {
-    bintrayUpload.user = bintrayUser
-    bintrayUpload.apiKey = bintrayKey
-}
-
-bintrayUpload.dependsOn configureBintray
-
-bintray {
-    publications = ['plugin']
-    pkg {
-        repo = 'gradle-plugins'
-        name = 'gradle-process-plugin'
-        licenses = ['Apache-2.0']
-    }
-}
-
-task install(dependsOn: publishToMavenLocal)
-
-build.dependsOn javadocJar, sourcesJar
+apply from: file('gradle/docs.gradle')
+apply from: file('gradle/publishing.gradle')
+apply from: file('gradle/idea.gradle')

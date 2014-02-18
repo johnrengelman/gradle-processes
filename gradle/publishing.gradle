@@ -1,0 +1,56 @@
+apply plugin: 'bintray'
+apply plugin: 'maven-publish'
+
+def pomConfig = {
+    licenses {
+        license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+        }
+    }
+    developers {
+        developer {
+            id 'jengelman'
+            name 'John Engelman'
+            email 'john.r.engelman@gmail.com'
+        }
+    }
+}
+
+publishing {
+    publications {
+        plugin(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'A gradle plugin to create and manage processes')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintrayUpload { task ->
+    dependsOn project.publishing.publications.plugin.artifacts
+    gradle.taskGraph.whenReady { taskGraph ->
+        if (taskGraph.hasTask(task)) {
+            task.user = bintrayUser
+            task.apiKey = bintrayKey
+        }
+    }
+}
+
+bintray {
+    publications = ['plugin']
+    pkg {
+        repo = 'gradle-plugins'
+        name = 'gradle-process-plugin'
+        licenses = ['Apache-2.0']
+    }
+}
+
+task install(dependsOn: publishToMavenLocal)
