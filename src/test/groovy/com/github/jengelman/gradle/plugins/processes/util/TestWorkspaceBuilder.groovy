@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jengelman.gradle.plugins.processes
+package com.github.jengelman.gradle.plugins.processes.util
 
 /**
  * Used in TestFile.create().

@@ -1,4 +1,4 @@
-package com.github.jengelman.gradle.plugins.processes
+package com.github.jengelman.gradle.plugins.processes.util
 
 import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.file.IdentityFileResolver

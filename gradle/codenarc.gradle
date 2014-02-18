@@ -1,0 +1,11 @@
+apply plugin: 'codenarc'
+
+codenarc {
+    configFile = rootProject.file('gradle/codenarc.groovy')
+    toolVersion = '0.20'
+}
+
+codenarcTest {
+    exclude 'com/github/jengelman/gradle/plugins/processes/util/**'
+    configFile = rootProject.file('gradle/codenarc-test.groovy')
+}

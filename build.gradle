@@ -21,6 +21,7 @@ apply plugin: 'groovy'
 apply plugin: 'bintray'
 apply plugin: 'maven-publish'
 apply plugin: 'idea'
+apply from: file('gradle/codenarc.gradle')
 
 group = 'com.github.jengelman.gradle.plugins'
 version = '0.2-SNAPSHOT'

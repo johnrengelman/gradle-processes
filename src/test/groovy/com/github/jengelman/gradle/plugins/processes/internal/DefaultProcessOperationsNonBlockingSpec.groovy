@@ -1,9 +1,9 @@
 package com.github.jengelman.gradle.plugins.processes.internal
 
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle
-import com.github.jengelman.gradle.plugins.processes.TestFiles
-import com.github.jengelman.gradle.plugins.processes.TestMain
-import com.github.jengelman.gradle.plugins.processes.TestNameTestDirectoryProvider
+import com.github.jengelman.gradle.plugins.processes.util.TestFiles
+import com.github.jengelman.gradle.plugins.processes.util.TestMain
+import com.github.jengelman.gradle.plugins.processes.util.TestNameTestDirectoryProvider
 import org.gradle.api.internal.file.DefaultFileOperations
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.internal.reflect.DirectInstantiator
@@ -20,7 +20,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
     private DefaultProcessOperations processOperations
     
     @Rule
-    public final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
+    final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
 
     def setup() {
         processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
@@ -28,13 +28,13 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
 
     def javafork() {
         given:
-        File testFile = tmpDir.file("someFile")
-        List files = ClasspathUtil.getClasspath(getClass().classLoader)
+        File testFile = tmpDir.file('someFile')
+        List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
         ProcessHandle process = processOperations.javafork {
             classpath(files as Object[])
-            main = TestMain.class.name
+            main = TestMain.name
             args testFile.absolutePath
         }
 
@@ -87,12 +87,12 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
 
     def fork() {
         given:
-        File testFile = tmpDir.file("someFile")
+        File testFile = tmpDir.file('someFile')
 
         when:
         ProcessHandle process = processOperations.fork {
-            executable = "touch"
-            workingDir = tmpDir.getTestDirectory()
+            executable = 'touch'
+            workingDir = tmpDir.testDirectory
             args testFile.name
         }
 
@@ -110,9 +110,9 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
     def execWithNonZeroExitValueShouldThrowException() {
         when:
         ProcessHandle process = processOperations.fork {
-            executable = "touch"
-            workingDir = tmpDir.getTestDirectory()
-            args tmpDir.testDirectory.name + "/nonExistingDir/someFile"
+            executable = 'touch'
+            workingDir = tmpDir.testDirectory
+            args tmpDir.testDirectory.name + '/nonExistingDir/someFile'
         }
 
         then:
@@ -132,9 +132,9 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         when:
         ProcessHandle process = processOperations.fork {
             ignoreExitValue = true
-            executable = "touch"
-            workingDir = tmpDir.getTestDirectory()
-            args tmpDir.testDirectory.name + "/nonExistingDir/someFile"
+            executable = 'touch'
+            workingDir = tmpDir.testDirectory
+            args tmpDir.testDirectory.name + '/nonExistingDir/someFile'
         }
 
         then:

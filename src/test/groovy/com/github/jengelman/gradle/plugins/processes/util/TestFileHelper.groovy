@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jengelman.gradle.plugins.processes
+package com.github.jengelman.gradle.plugins.processes.util
 
+import com.github.jengelman.gradle.plugins.processes.ExecOutput
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.StringUtils
 import org.apache.tools.ant.Project

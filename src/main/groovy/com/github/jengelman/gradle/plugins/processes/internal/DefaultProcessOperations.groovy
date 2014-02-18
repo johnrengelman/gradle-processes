@@ -10,6 +10,9 @@ import org.gradle.process.ExecResult
 import org.gradle.process.internal.ExecException
 import org.gradle.util.ConfigureUtil
 
+/**
+ * Implementation of process interactions
+ */
 class DefaultProcessOperations implements ProcessOperations {
 
     private final Instantiator instantiator
@@ -28,13 +31,15 @@ class DefaultProcessOperations implements ProcessOperations {
 
     @Override
     ProcessHandle javafork(Closure cl) {
-        JavaForkAction javaForkAction = ConfigureUtil.configure(cl, instantiator.newInstance(DefaultJavaForkAction.class, fileResolver))
+        JavaForkAction javaForkAction =
+                ConfigureUtil.configure(cl, instantiator.newInstance(DefaultJavaForkAction, fileResolver))
         return javaForkAction.fork()
     }
 
     @Override
     ProcessHandle fork(Closure cl) {
-        ForkAction forkAction = ConfigureUtil.configure(cl, instantiator.newInstance(DefaultForkAction.class, fileResolver))
+        ForkAction forkAction =
+                ConfigureUtil.configure(cl, instantiator.newInstance(DefaultForkAction, fileResolver))
         return forkAction.fork()
     }
 
@@ -49,8 +54,8 @@ class DefaultProcessOperations implements ProcessOperations {
 
     @Override
     List<ExecResult> waitForFinish(List<ProcessHandle> forks) {
-        List<ExecResult> results = new ArrayList<ExecResult>()
-        List<Throwable> throwables = new ArrayList<Throwable>()
+        List<ExecResult> results = []
+        List<Throwable> throwables = []
         forks.each { fork ->
             try {
                 ExecResult result = waitForFinish(fork)

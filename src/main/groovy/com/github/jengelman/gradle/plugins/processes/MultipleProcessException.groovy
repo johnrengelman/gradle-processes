@@ -8,7 +8,7 @@ import com.github.jengelman.gradle.plugins.processes.internal.AbstractMultiCause
 public class MultipleProcessException extends AbstractMultiCauseException {
 
     public MultipleProcessException(Iterable<? extends Throwable> causes) {
-        super("Multiple process exceptions", causes)
+        super('Multiple process exceptions', causes)
     }
 
     public void replaceCauses(List<? extends Throwable> causes) {

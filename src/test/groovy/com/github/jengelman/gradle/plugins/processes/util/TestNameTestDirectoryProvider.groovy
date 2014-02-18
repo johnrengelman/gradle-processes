@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.jengelman.gradle.plugins.processes;
+package com.github.jengelman.gradle.plugins.processes.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.rules.MethodRule;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.Statement;
+import org.junit.runners.model.Statement
 
-import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

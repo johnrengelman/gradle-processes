@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.jengelman.gradle.plugins.processes;
+package com.github.jengelman.gradle.plugins.processes.util
 
 /**
  * Implementations provide a working space to be used in tests.
@@ -28,6 +28,6 @@ public interface TestDirectoryProvider {
      *
      * @return The directory to use, guaranteed to exist.
      */
-    TestFile getTestDirectory();
+    TestFile getTestDirectory()
 
 }

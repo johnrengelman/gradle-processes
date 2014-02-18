@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.jengelman.gradle.plugins.processes;
+package com.github.jengelman.gradle.plugins.processes.util
 
-import groovy.lang.Closure;
+import com.github.jengelman.gradle.plugins.processes.ExecOutput
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -28,10 +28,7 @@ import org.gradle.internal.nativeplatform.filesystem.*;
 import org.gradle.internal.nativeplatform.services.NativeServices;
 import org.hamcrest.Matcher;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.*
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.jar.JarFile;

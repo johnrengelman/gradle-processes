@@ -1,6 +1,8 @@
 package com.github.jengelman.gradle.plugins.processes
 
 import com.github.jengelman.gradle.plugins.processes.internal.NonBlockingProcessOperations
+import com.github.jengelman.gradle.plugins.processes.util.TestMain
+import com.github.jengelman.gradle.plugins.processes.util.TestNameTestDirectoryProvider
 import org.gradle.api.Project
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.process.ExecResult
@@ -14,7 +16,7 @@ class ProcessesPluginSpec extends Specification {
     private Project project
 
     @Rule
-    public final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
+    final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
 
     def setup() {
         project = ProjectBuilder.builder().build()
@@ -32,7 +34,7 @@ class ProcessesPluginSpec extends Specification {
         assert project.plugins.hasPlugin(ProcessesPlugin)
     }
 
-    def "creates extension"() {
+    def 'plugin creates extension'() {
         expect:
         assert project.plugins.hasPlugin(ProcessesPlugin)
         assert project.extensions.getByType(ProcessesExtension)
@@ -47,13 +49,13 @@ class ProcessesPluginSpec extends Specification {
 
     def 'fork a java process from the plugin extension'() {
         given:
-        File testFile = tmpDir.file("someFile")
-        List files = ClasspathUtil.getClasspath(getClass().classLoader)
+        File testFile = tmpDir.file('someFile')
+        List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
         ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
-            main = TestMain.class.name
+            main = TestMain.name
             args testFile.absolutePath
         }
 
@@ -70,13 +72,13 @@ class ProcessesPluginSpec extends Specification {
 
     def 'exec a java process from the plugin extension'() {
         given:
-        File testFile = tmpDir.file("someFile")
-        List files = ClasspathUtil.getClasspath(getClass().classLoader)
+        File testFile = tmpDir.file('someFile')
+        List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
         ExecResult result = project.procs.javaexec {
             classpath(files as Object[])
-            main = TestMain.class.name
+            main = TestMain.name
             args testFile.absolutePath
         }
 
@@ -87,12 +89,12 @@ class ProcessesPluginSpec extends Specification {
 
     def 'fork a process from the plugin extension'() {
         given:
-        File testFile = tmpDir.file("someFile")
+        File testFile = tmpDir.file('someFile')
 
         when:
         ProcessHandle process = project.procs.fork {
-            executable = "touch"
-            workingDir = tmpDir.getTestDirectory()
+            executable = 'touch'
+            workingDir = tmpDir.testDirectory
             args testFile.name
         }
 
@@ -109,12 +111,12 @@ class ProcessesPluginSpec extends Specification {
 
     def 'exec a process from the plugin extension'() {
         given:
-        File testFile = tmpDir.file("someFile")
+        File testFile = tmpDir.file('someFile')
 
         when:
         ExecResult result = project.procs.exec {
-            executable = "touch"
-            workingDir = tmpDir.getTestDirectory()
+            executable = 'touch'
+            workingDir = tmpDir.testDirectory
             args testFile.name
         }
 
@@ -159,19 +161,19 @@ class ProcessesPluginSpec extends Specification {
 
     def 'wait for multiple forked java processes to complete'() {
         given:
-        File testFile = tmpDir.file("someFile")
-        File testFile2 = tmpDir.file("someFile2")
-        List files = ClasspathUtil.getClasspath(getClass().classLoader)
+        File testFile = tmpDir.file('someFile')
+        File testFile2 = tmpDir.file('someFile2')
+        List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
         ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
-            main = TestMain.class.name
+            main = TestMain.name
             args testFile.absolutePath
         }
         ProcessHandle process2 = project.procs.javafork {
             classpath(files as Object[])
-            main = TestMain.class.name
+            main = TestMain.name
             args testFile2.absolutePath
         }
 
@@ -192,13 +194,13 @@ class ProcessesPluginSpec extends Specification {
 
     def 'wait for multiple forked java processes to complete with ignored exit should not throw exception'() {
         given:
-        File testFile = tmpDir.file("someFile")
-        List files = ClasspathUtil.getClasspath(getClass().classLoader)
+        File testFile = tmpDir.file('someFile')
+        List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
         ProcessHandle process = project.procs.javafork {
             classpath(files as Object[])
-            main = TestMain.class.name
+            main = TestMain.name
             args testFile.absolutePath
         }
         ProcessHandle process2 = project.procs.javafork {

@@ -1,4 +1,4 @@
-package com.github.jengelman.gradle.plugins.processes
+package com.github.jengelman.gradle.plugins.processes.util
 
 import org.apache.commons.io.FileUtils
 
