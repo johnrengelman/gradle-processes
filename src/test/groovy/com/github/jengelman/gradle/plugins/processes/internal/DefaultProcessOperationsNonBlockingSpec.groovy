@@ -13,7 +13,7 @@ import org.gradle.process.internal.ExecException
 import org.junit.Rule
 import spock.lang.Specification
 
-class DefaultProcessOperationsSpec extends Specification {
+class DefaultProcessOperationsNonBlockingSpec extends Specification {
 
     private final Instantiator instantiator = new DirectInstantiator()
 
@@ -22,9 +22,13 @@ class DefaultProcessOperationsSpec extends Specification {
     @Rule
     public final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
 
-    def javafork() {
-        File testFile = tmpDir.file("someFile")
+    def setup() {
         processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
+    }
+
+    def javafork() {
+        given:
+        File testFile = tmpDir.file("someFile")
         List files = ClasspathUtil.getClasspath(getClass().classLoader)
 
         when:
@@ -46,8 +50,6 @@ class DefaultProcessOperationsSpec extends Specification {
     }
 
     def javaforkWithNonZeroExitValueShouldThrowException() {
-        processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
-
         when:
         ProcessHandle process = processOperations.javafork {
             main = 'org.gradle.UnknownMain'
@@ -67,12 +69,72 @@ class DefaultProcessOperationsSpec extends Specification {
     }
 
     def javaforkWithNonZeroExitValueAndIgnoreExitValueShouldNotThrowException() {
-        processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
-
         when:
         ProcessHandle process = processOperations.javafork {
             main = 'org.gradle.UnknownMain'
             ignoreExitValue = true
+        }
+
+        then:
+        process != null
+
+        when:
+        ExecResult result = process.waitForFinish()
+
+        then:
+        result.exitValue != 0
+    }
+
+    def fork() {
+        given:
+        File testFile = tmpDir.file("someFile")
+
+        when:
+        ProcessHandle process = processOperations.fork {
+            executable = "touch"
+            workingDir = tmpDir.getTestDirectory()
+            args testFile.name
+        }
+
+        then:
+        process.state != null
+
+        when:
+        ExecResult result = process.waitForFinish()
+
+        then:
+        testFile.isFile()
+        result.exitValue == 0
+    }
+
+    def execWithNonZeroExitValueShouldThrowException() {
+        when:
+        ProcessHandle process = processOperations.fork {
+            executable = "touch"
+            workingDir = tmpDir.getTestDirectory()
+            args tmpDir.testDirectory.name + "/nonExistingDir/someFile"
+        }
+
+        then:
+        assert process.state != null
+
+        when:
+        ExecResult result = process.waitForFinish()
+        if (!process.isIgnoreExitValue()) {
+            result.assertNormalExitValue()
+        }
+
+        then:
+        thrown(ExecException)
+    }
+
+    def execWithNonZeroExitValueAndIgnoreExitValueShouldNotThrowException() {
+        when:
+        ProcessHandle process = processOperations.fork {
+            ignoreExitValue = true
+            executable = "touch"
+            workingDir = tmpDir.getTestDirectory()
+            args tmpDir.testDirectory.name + "/nonExistingDir/someFile"
         }
 
         then:

@@ -68,6 +68,61 @@ class ProcessesPluginSpec extends Specification {
         result.exitValue == 0
     }
 
+    def 'exec a java process from the plugin extension'() {
+        given:
+        File testFile = tmpDir.file("someFile")
+        List files = ClasspathUtil.getClasspath(getClass().classLoader)
+
+        when:
+        ExecResult result = project.procs.javaexec {
+            classpath(files as Object[])
+            main = TestMain.class.name
+            args testFile.absolutePath
+        }
+
+        then:
+        testFile.isFile()
+        result.exitValue == 0
+    }
+
+    def 'fork a process from the plugin extension'() {
+        given:
+        File testFile = tmpDir.file("someFile")
+
+        when:
+        ProcessHandle process = project.procs.fork {
+            executable = "touch"
+            workingDir = tmpDir.getTestDirectory()
+            args testFile.name
+        }
+
+        then:
+        process.state != null
+
+        when:
+        ExecResult result = project.procs.waitForFinish(process)
+
+        then:
+        testFile.isFile()
+        result.exitValue == 0
+    }
+
+    def 'exec a process from the plugin extension'() {
+        given:
+        File testFile = tmpDir.file("someFile")
+
+        when:
+        ExecResult result = project.procs.exec {
+            executable = "touch"
+            workingDir = tmpDir.getTestDirectory()
+            args testFile.name
+        }
+
+        then:
+        testFile.isFile()
+        result.exitValue == 0
+    }
+
     def 'forked java process with ignored exit value should not throw exception'() {
         when:
         project.plugins.apply(ProcessesPlugin)
@@ -86,7 +141,7 @@ class ProcessesPluginSpec extends Specification {
         assert result.exitValue != 0
     }
 
-    def 'forked java process  should throw exception'() {
+    def 'forked java process should throw exception'() {
         when:
         ProcessHandle process = project.procs.javafork {
             main = 'org.gradle.UnknownMain'
