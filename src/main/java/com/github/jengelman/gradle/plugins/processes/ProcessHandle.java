@@ -54,4 +54,10 @@ public interface ProcessHandle {
      * @return true if the exit value should be ignored. False otherwise.
      */
     boolean isIgnoreExitValue();
+
+    /**
+     * Abort the process
+     */
+    void abort();
+
 }

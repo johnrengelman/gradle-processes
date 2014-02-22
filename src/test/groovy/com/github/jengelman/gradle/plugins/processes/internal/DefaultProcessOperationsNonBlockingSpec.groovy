@@ -4,12 +4,14 @@ import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import com.github.jengelman.gradle.plugins.processes.util.TestFiles
 import com.github.jengelman.gradle.plugins.processes.util.TestMain
 import com.github.jengelman.gradle.plugins.processes.util.TestNameTestDirectoryProvider
+import com.github.jengelman.gradle.plugins.processes.util.WaitTestMain
 import org.gradle.api.internal.file.DefaultFileOperations
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.internal.reflect.DirectInstantiator
 import org.gradle.internal.reflect.Instantiator
 import org.gradle.process.ExecResult
 import org.gradle.process.internal.ExecException
+import org.gradle.process.internal.ExecHandleState
 import org.junit.Rule
 import spock.lang.Specification
 
@@ -145,6 +147,26 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
 
         then:
         result.exitValue != 0
+    }
+
+    def abortProcess() {
+        given:
+        List files = ClasspathUtil.getClasspath(this.class.classLoader)
+
+        when:
+        ProcessHandle process = processOperations.javafork {
+            classpath(files as Object[])
+            main = WaitTestMain.name
+        }
+
+        then:
+        process.state == ExecHandleState.STARTED
+
+        when:
+        process.abort()
+
+        then:
+        process.state == ExecHandleState.STARTED //TODO This doesn't get set to ABORTED by Gradle core
     }
 
     def resolver() {

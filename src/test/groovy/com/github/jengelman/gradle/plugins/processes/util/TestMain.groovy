@@ -8,3 +8,12 @@ class TestMain {
         FileUtils.touch(new File(args[0]))
     }
 }
+
+class WaitTestMain {
+
+    static void main(String[] args) {
+        while(true) {
+            Thread.sleep(5000)
+        }
+    }
+}

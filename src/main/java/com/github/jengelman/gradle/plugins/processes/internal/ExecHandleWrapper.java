@@ -2,6 +2,7 @@ package com.github.jengelman.gradle.plugins.processes.internal;
 
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle;
 import org.gradle.process.ExecResult;
+import org.gradle.process.internal.DefaultExecHandle;
 import org.gradle.process.internal.ExecHandle;
 import org.gradle.process.internal.ExecHandleState;
 
@@ -59,6 +60,11 @@ public class ExecHandleWrapper implements ProcessHandle {
     @Override
     public boolean isIgnoreExitValue() {
         return ignoreExitValue;
+    }
+
+    @Override
+    public void abort() {
+        execHandle.abort();
     }
 
     public static ProcessHandle wrap(ExecHandle execHandle) {
