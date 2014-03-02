@@ -79,4 +79,9 @@ class DefaultProcessOperations implements ProcessOperations {
     ExecResult exec(Closure closure) {
         return processOperations.exec(closure)
     }
+
+    @Override
+    ForkAction newForkAction() {
+        return new DefaultForkAction(fileResolver)
+    }
 }
