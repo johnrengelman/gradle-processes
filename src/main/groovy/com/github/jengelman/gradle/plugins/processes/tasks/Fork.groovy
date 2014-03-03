@@ -3,7 +3,7 @@ package com.github.jengelman.gradle.plugins.processes.tasks
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import com.github.jengelman.gradle.plugins.processes.ProcessesExtension
 import com.github.jengelman.gradle.plugins.processes.internal.ForkAction
-import org.gradle.api.DefaultTask
+import org.gradle.api.internal.ConventionTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecSpec
 import org.gradle.process.ProcessForkOptions
@@ -13,7 +13,7 @@ import org.gradle.process.ProcessForkOptions
  * subsequent tasks
  */
 @SuppressWarnings('MethodCount')
-class Fork extends DefaultTask implements ExecSpec {
+class Fork extends ConventionTask implements ExecSpec {
 
     private ForkAction forkAction
     private ProcessHandle processHandle

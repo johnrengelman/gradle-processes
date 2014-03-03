@@ -2,14 +2,16 @@ package com.github.jengelman.gradle.plugins.processes.tasks
 
 import com.github.jengelman.gradle.plugins.processes.ProcessesPlugin
 import com.github.jengelman.gradle.plugins.processes.util.TestFile
+import com.github.jengelman.gradle.plugins.processes.util.TestMain
 import com.github.jengelman.gradle.plugins.processes.util.TestNameTestDirectoryProvider
+import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.testkit.functional.ExecutionResult
 import org.gradle.testkit.functional.GradleRunner
 import org.gradle.testkit.functional.GradleRunnerFactory
 import org.junit.Rule
 import spock.lang.Specification
 
-class ForkSpec extends Specification {
+class JavaForkSpec extends Specification {
 
     @Rule
     final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
@@ -22,30 +24,33 @@ class ForkSpec extends Specification {
         runner.directory = tmpDir.testDirectory
     }
 
-    @SuppressWarnings('Println')
+    @SuppressWarnings(['Println', 'ClosureAsLastMethodParameter'])
     def forkTask() {
         given:
-        File testFile = tmpDir.testDirectory.file('someFile')
-
+        File testFile = tmpDir.file('someFile')
+        List<URL> files = ClasspathUtil.getClasspath(this.class.classLoader)
         buildFile << """
-        task forkMain(type: ${Fork.name}) {
-            executable = 'touch'
-            workingDir = "${tmpDir.testDirectory}"
-            args "${testFile.path}"
+        List cp = ${files.collect { 'new URL("' + it.toString() + '")' } }
+        task javaForkMain(type: ${JavaFork.name}) {
+            classpath(cp as Object[])
+            main = '${TestMain.name}'
+            args '${testFile.absolutePath}'
         }
 
         task waitForFinish() {
             doLast {
-                forkMain.processHandle.waitForFinish().assertNormalExitValue()
+                javaForkMain.processHandle.waitForFinish().assertNormalExitValue()
                 println 'Process completed'
             }
         }
 
-        forkMain.finalizedBy waitForFinish
+        javaForkMain.finalizedBy waitForFinish
         """
 
         when:
-        runner.arguments << 'forkMain'
+        println buildFile.text
+        runner.arguments << 'javaForkMain'
+        runner.arguments << '--stacktrace'
         ExecutionResult result = runner.run()
 
         then:

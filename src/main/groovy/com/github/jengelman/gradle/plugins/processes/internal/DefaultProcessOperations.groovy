@@ -84,4 +84,9 @@ class DefaultProcessOperations implements ProcessOperations {
     ForkAction newForkAction() {
         return new DefaultForkAction(fileResolver)
     }
+
+    @Override
+    JavaForkAction newJavaForkAction() {
+        return new DefaultJavaForkAction(fileResolver)
+    }
 }
