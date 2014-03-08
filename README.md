@@ -9,38 +9,7 @@ bolster the built in capabilities of Gradle which allow for processing forking o
 Compatibility Notes
 -------------------
 
-Please note that this plugin relies on some internal Gradle core classes and APIs. As such, it has the potential
-for breaking compatibility between various Gradle versions. The table below will try to track those issues.
-
-**Key**
-* O => untested
-* + => compatible
-* - => non-compatbile
-
-<table>
-    <thead>
-        <tr>
-            <th>Plugin Version</th>
-            <th>Gradle pre-1.9</th>
-            <th>Gradle 1.9</th>
-            <th>Gradle 1.10-rc-1+</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>0.1</td>
-            <td>O</td>
-            <td>+</td>
-            <td>-</td>
-        </tr>
-        <tr>
-            <td>0.2</td>
-            <td>0</td>
-            <td>+</td>
-            <td>+</td>
-        </tr>
-    </tbody>
-</table>
+This plugin is tested against Gradle versions 1.8 - 1.11 (final versions only).
 
 How To Use
 ----------
