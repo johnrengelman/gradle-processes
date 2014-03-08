@@ -47,3 +47,4 @@
 
 build/
 .gradle
+.gradle-test-kit/
