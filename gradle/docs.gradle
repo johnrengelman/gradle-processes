@@ -5,9 +5,16 @@ tasks.withType(Javadoc) {
     options.links(javaApiUrl, groovyApiUrl)
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
+tasks.withType(Groovydoc) {
+    [javaApiUrl, groovyApiUrl].each {
+        link(it, *(new URL("$it/package-list").text.tokenize("\n")))
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: [javadoc, groovydoc]) {
     classifier = 'javadoc'
     from 'build/docs/javadoc'
+    from 'build/docs/groovydoc'
 }
 
 task sourcesJar(type: Jar) {
