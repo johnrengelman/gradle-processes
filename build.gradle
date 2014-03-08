@@ -20,7 +20,7 @@ apply plugin: 'groovy'
 apply from: file('gradle/codenarc.gradle')
 
 group = 'com.github.jengelman.gradle.plugins'
-version = '0.2'
+version = '0.3-SNAPSHOT'
 
 ext.isSnapshot = version.endsWith("SNAPSHOT")
 
