@@ -3,7 +3,6 @@ package com.github.jengelman.gradle.plugins.processes.internal
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import com.github.jengelman.gradle.plugins.processes.util.TestFiles
 import com.github.jengelman.gradle.plugins.processes.util.TestMain
-import com.github.jengelman.gradle.plugins.processes.util.TestNameTestDirectoryProvider
 import com.github.jengelman.gradle.plugins.processes.util.WaitTestMain
 import org.gradle.api.internal.file.DefaultFileOperations
 import org.gradle.internal.classloader.ClasspathUtil
@@ -13,6 +12,7 @@ import org.gradle.process.ExecResult
 import org.gradle.process.internal.ExecException
 import org.gradle.process.internal.ExecHandleState
 import org.junit.Rule
+import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 class DefaultProcessOperationsNonBlockingSpec extends Specification {
@@ -21,8 +21,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
 
     private DefaultProcessOperations processOperations
     
-    @Rule
-    final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
+    @Rule TemporaryFolder tmpDir
 
     def setup() {
         processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
@@ -30,7 +29,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
 
     def javafork() {
         given:
-        File testFile = tmpDir.file('someFile')
+        File testFile = tmpDir.newFile('someFile')
         List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
@@ -89,12 +88,12 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
 
     def fork() {
         given:
-        File testFile = tmpDir.file('someFile')
+        File testFile = tmpDir.newFile('someFile')
 
         when:
         ProcessHandle process = processOperations.fork {
             executable = 'touch'
-            workingDir = tmpDir.testDirectory
+            workingDir = tmpDir.root
             args testFile.name
         }
 
@@ -113,8 +112,8 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         when:
         ProcessHandle process = processOperations.fork {
             executable = 'touch'
-            workingDir = tmpDir.testDirectory
-            args tmpDir.testDirectory.name + '/nonExistingDir/someFile'
+            workingDir = tmpDir.root
+            args tmpDir.root.name + '/nonExistingDir/someFile'
         }
 
         then:
@@ -135,8 +134,8 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         ProcessHandle process = processOperations.fork {
             ignoreExitValue = true
             executable = 'touch'
-            workingDir = tmpDir.testDirectory
-            args tmpDir.testDirectory.name + '/nonExistingDir/someFile'
+            workingDir = tmpDir.root
+            args tmpDir.root.name + '/nonExistingDir/someFile'
         }
 
         then:
@@ -170,7 +169,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
     }
 
     def resolver() {
-        return TestFiles.resolver(tmpDir.testDirectory)
+        return TestFiles.resolver(tmpDir.root)
     }
 
     private DefaultFileOperations fileOps() {

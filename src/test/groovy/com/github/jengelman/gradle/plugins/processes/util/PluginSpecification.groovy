@@ -17,11 +17,11 @@ class PluginSpecification extends Specification {
     }
 
     File getBuildFile() {
-        dir.newFile('build.gradle')
+        file('build.gradle')
     }
 
     File getSettingsFile() {
-        dir.newFile('settings.gradle')
+        file('settings.gradle')
     }
 
     File file(String path) {

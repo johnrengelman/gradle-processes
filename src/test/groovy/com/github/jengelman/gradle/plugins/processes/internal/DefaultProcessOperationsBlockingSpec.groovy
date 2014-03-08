@@ -2,7 +2,6 @@ package com.github.jengelman.gradle.plugins.processes.internal
 
 import com.github.jengelman.gradle.plugins.processes.util.TestFiles
 import com.github.jengelman.gradle.plugins.processes.util.TestMain
-import com.github.jengelman.gradle.plugins.processes.util.TestNameTestDirectoryProvider
 import org.gradle.api.internal.file.DefaultFileOperations
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.internal.reflect.DirectInstantiator
@@ -10,6 +9,7 @@ import org.gradle.internal.reflect.Instantiator
 import org.gradle.process.ExecResult
 import org.gradle.process.internal.ExecException
 import org.junit.Rule
+import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 class DefaultProcessOperationsBlockingSpec extends Specification {
@@ -18,15 +18,14 @@ class DefaultProcessOperationsBlockingSpec extends Specification {
 
     private DefaultProcessOperations processOperations
 
-    @Rule
-    final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
+    @Rule TemporaryFolder tmpDir
 
     def setup() {
         processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
     }
 
     def javaexec() {
-        File testFile = tmpDir.file('someFile')
+        File testFile = tmpDir.newFile('someFile')
         List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
@@ -64,12 +63,12 @@ class DefaultProcessOperationsBlockingSpec extends Specification {
 
     def exec() {
         given:
-        File testFile = tmpDir.file('someFile')
+        File testFile = tmpDir.newFile('someFile')
 
         when:
         ExecResult result = processOperations.exec {
             executable = 'touch'
-            workingDir = tmpDir.testDirectory
+            workingDir = tmpDir.root
             args testFile.name
         }
 
@@ -82,8 +81,8 @@ class DefaultProcessOperationsBlockingSpec extends Specification {
         when:
         processOperations.exec {
             executable = 'touch'
-            workingDir = tmpDir.testDirectory
-            args tmpDir.testDirectory.name + '/nonExistingDir/someFile'
+            workingDir = tmpDir.root
+            args tmpDir.root.name + '/nonExistingDir/someFile'
         }
 
         then:
@@ -95,8 +94,8 @@ class DefaultProcessOperationsBlockingSpec extends Specification {
         ExecResult result = processOperations.exec {
             ignoreExitValue = true
             executable = 'touch'
-            workingDir = tmpDir.testDirectory
-            args tmpDir.testDirectory.name + '/nonExistingDir/someFile'
+            workingDir = tmpDir.root
+            args tmpDir.root.name + '/nonExistingDir/someFile'
         }
 
         then:
@@ -104,7 +103,7 @@ class DefaultProcessOperationsBlockingSpec extends Specification {
     }
 
     def resolver() {
-        return TestFiles.resolver(tmpDir.testDirectory)
+        return TestFiles.resolver(tmpDir.root)
     }
 
     private DefaultFileOperations fileOps() {

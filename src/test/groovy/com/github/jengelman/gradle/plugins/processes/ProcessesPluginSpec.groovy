@@ -2,21 +2,20 @@ package com.github.jengelman.gradle.plugins.processes
 
 import com.github.jengelman.gradle.plugins.processes.internal.NonBlockingProcessOperations
 import com.github.jengelman.gradle.plugins.processes.util.TestMain
-import com.github.jengelman.gradle.plugins.processes.util.TestNameTestDirectoryProvider
 import org.gradle.api.Project
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.process.ExecResult
 import org.gradle.process.internal.ExecException
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Rule
+import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 class ProcessesPluginSpec extends Specification {
 
     private Project project
 
-    @Rule
-    final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
+    @Rule TemporaryFolder tmpDir
 
     def setup() {
         project = ProjectBuilder.builder().build()
@@ -49,7 +48,7 @@ class ProcessesPluginSpec extends Specification {
 
     def 'fork a java process from the plugin extension'() {
         given:
-        File testFile = tmpDir.file('someFile')
+        File testFile = tmpDir.newFile('someFile')
         List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
@@ -72,7 +71,7 @@ class ProcessesPluginSpec extends Specification {
 
     def 'exec a java process from the plugin extension'() {
         given:
-        File testFile = tmpDir.file('someFile')
+        File testFile = tmpDir.newFile('someFile')
         List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
@@ -89,12 +88,12 @@ class ProcessesPluginSpec extends Specification {
 
     def 'fork a process from the plugin extension'() {
         given:
-        File testFile = tmpDir.file('someFile')
+        File testFile = tmpDir.newFile('someFile')
 
         when:
         ProcessHandle process = project.procs.fork {
             executable = 'touch'
-            workingDir = tmpDir.testDirectory
+            workingDir = tmpDir.root
             args testFile.name
         }
 
@@ -111,12 +110,12 @@ class ProcessesPluginSpec extends Specification {
 
     def 'exec a process from the plugin extension'() {
         given:
-        File testFile = tmpDir.file('someFile')
+        File testFile = tmpDir.newFile('someFile')
 
         when:
         ExecResult result = project.procs.exec {
             executable = 'touch'
-            workingDir = tmpDir.testDirectory
+            workingDir = tmpDir.root
             args testFile.name
         }
 
@@ -161,8 +160,8 @@ class ProcessesPluginSpec extends Specification {
 
     def 'wait for multiple forked java processes to complete'() {
         given:
-        File testFile = tmpDir.file('someFile')
-        File testFile2 = tmpDir.file('someFile2')
+        File testFile = tmpDir.newFile('someFile')
+        File testFile2 = tmpDir.newFile('someFile2')
         List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
@@ -194,7 +193,7 @@ class ProcessesPluginSpec extends Specification {
 
     def 'wait for multiple forked java processes to complete with ignored exit should not throw exception'() {
         given:
-        File testFile = tmpDir.file('someFile')
+        File testFile = tmpDir.newFile('someFile')
         List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:

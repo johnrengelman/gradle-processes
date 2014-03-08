@@ -1,36 +1,26 @@
 package com.github.jengelman.gradle.plugins.processes.tasks
 
 import com.github.jengelman.gradle.plugins.processes.ProcessesPlugin
-import com.github.jengelman.gradle.plugins.processes.util.TestFile
-import com.github.jengelman.gradle.plugins.processes.util.TestNameTestDirectoryProvider
+import com.github.jengelman.gradle.plugins.processes.util.PluginSpecification
 import org.gradle.testkit.functional.ExecutionResult
-import org.gradle.testkit.functional.GradleRunner
-import org.gradle.testkit.functional.GradleRunnerFactory
-import org.junit.Rule
-import spock.lang.Specification
 
-class ForkSpec extends Specification {
-
-    @Rule
-    final TestNameTestDirectoryProvider tmpDir = new TestNameTestDirectoryProvider()
-    GradleRunner runner = GradleRunnerFactory.create()
+class ForkSpec extends PluginSpecification {
 
     def setup() {
         buildFile << """
         apply plugin: ${ProcessesPlugin.name}
         """
-        runner.directory = tmpDir.testDirectory
     }
 
     @SuppressWarnings('Println')
     def forkTask() {
         given:
-        File testFile = tmpDir.testDirectory.file('someFile')
+        File testFile = file('someFile')
 
         buildFile << """
         task forkMain(type: ${Fork.name}) {
             executable = 'touch'
-            workingDir = "${tmpDir.testDirectory}"
+            workingDir = "${dir.root}"
             args "${testFile.path}"
         }
 
@@ -50,9 +40,5 @@ class ForkSpec extends Specification {
 
         then:
         assert result.standardOutput.contains('Process completed')
-    }
-
-    private TestFile getBuildFile() {
-        tmpDir.testDirectory.file('build.gradle')
     }
 }
