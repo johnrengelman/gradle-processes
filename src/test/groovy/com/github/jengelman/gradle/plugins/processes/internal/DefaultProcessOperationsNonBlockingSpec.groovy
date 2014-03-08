@@ -1,6 +1,7 @@
 package com.github.jengelman.gradle.plugins.processes.internal
 
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle
+import com.github.jengelman.gradle.plugins.processes.ProcessHandleListener
 import com.github.jengelman.gradle.plugins.processes.util.TestFiles
 import com.github.jengelman.gradle.plugins.processes.util.TestMain
 import com.github.jengelman.gradle.plugins.processes.util.WaitTestMain
@@ -148,6 +149,69 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         result.exitValue != 0
     }
 
+    def listenToFork() {
+        given:
+        File testFile = tmpDir.newFile('someFile')
+        boolean startedCalled = false
+        boolean finishedCalled = false
+
+        when:
+        ProcessHandle process = processOperations.fork {
+            executable = 'touch'
+            workingDir = tmpDir.root
+            args testFile.name
+            listener new ProcessHandleListener() {
+
+                @Override
+                void executionStarted(ProcessHandle processHandle) {
+                    startedCalled = true
+                }
+
+                @Override
+                void executionFinished(ProcessHandle processHandle, ExecResult execResult) {
+                    finishedCalled = true
+                }
+            }
+        }
+        process.waitForFinish()
+
+        then:
+        assert startedCalled
+        assert finishedCalled
+    }
+
+    def listenToJavaFork() {
+        given:
+        File testFile = tmpDir.newFile('someFile')
+        List files = ClasspathUtil.getClasspath(this.class.classLoader)
+        boolean startedCalled = false
+        boolean finishedCalled = false
+
+        when:
+        ProcessHandle process = processOperations.javafork {
+            classpath(files as Object[])
+            main = TestMain.name
+            args testFile.absolutePath
+            listener new ProcessHandleListener() {
+
+                @Override
+                void executionStarted(ProcessHandle processHandle) {
+                    startedCalled = true
+                }
+
+                @Override
+                void executionFinished(ProcessHandle processHandle, ExecResult execResult) {
+                    finishedCalled = true
+                }
+            }
+        }
+        process.waitForFinish()
+
+        then:
+        assert startedCalled
+        assert finishedCalled
+    }
+
     def abortProcess() {
         given:
         List files = ClasspathUtil.getClasspath(this.class.classLoader)
@@ -166,6 +230,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
 
         then:
         process.state == ExecHandleState.STARTED //TODO This doesn't get set to ABORTED by Gradle core
+        process.waitForFinish().exitValue != 0
     }
 
     def resolver() {

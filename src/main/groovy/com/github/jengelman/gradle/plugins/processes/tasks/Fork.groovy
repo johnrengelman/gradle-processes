@@ -1,6 +1,7 @@
 package com.github.jengelman.gradle.plugins.processes.tasks
 
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle
+import com.github.jengelman.gradle.plugins.processes.ProcessHandleListener
 import com.github.jengelman.gradle.plugins.processes.ProcessesExtension
 import com.github.jengelman.gradle.plugins.processes.internal.ForkAction
 import org.gradle.api.internal.ConventionTask
@@ -187,5 +188,10 @@ class Fork extends ConventionTask implements ExecSpec {
 
     ProcessHandle getProcessHandle() {
         return this.processHandle
+    }
+
+    Fork listener(ProcessHandleListener listener) {
+        forkAction.listener(listener)
+        return this
     }
 }

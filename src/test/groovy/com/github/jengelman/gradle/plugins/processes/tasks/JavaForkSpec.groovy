@@ -1,9 +1,12 @@
 package com.github.jengelman.gradle.plugins.processes.tasks
 
+import com.github.jengelman.gradle.plugins.processes.ProcessHandle
+import com.github.jengelman.gradle.plugins.processes.ProcessHandleListener
 import com.github.jengelman.gradle.plugins.processes.ProcessesPlugin
 import com.github.jengelman.gradle.plugins.processes.util.PluginSpecification
 import com.github.jengelman.gradle.plugins.processes.util.TestMain
 import org.gradle.internal.classloader.ClasspathUtil
+import org.gradle.process.ExecResult
 import org.gradle.testkit.functional.ExecutionResult
 
 class JavaForkSpec extends PluginSpecification {
@@ -25,6 +28,14 @@ class JavaForkSpec extends PluginSpecification {
             classpath(cp as Object[])
             main = '${TestMain.name}'
             args '${testFile.absolutePath}'
+            listener(new ${ProcessHandleListener.name}() {
+                void executionStarted(${ProcessHandle.name} handle) {
+                    println 'Execution Started'
+                }
+                void executionFinished(${ProcessHandle.name} handle, ${ExecResult.name} result) {
+                    println 'Execution Finished'
+                }
+            })
         }
 
         task waitForFinish() {
@@ -38,12 +49,12 @@ class JavaForkSpec extends PluginSpecification {
         """
 
         when:
-        println buildFile.text
         runner.arguments << 'javaForkMain'
-        runner.arguments << '--stacktrace'
         ExecutionResult result = runner.run()
 
         then:
         assert result.standardOutput.contains('Process completed')
+        assert result.standardOutput.contains('Execution Started')
+        assert result.standardOutput.contains('Execution Finished')
     }
 }
