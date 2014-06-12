@@ -22,7 +22,7 @@ buildscript {
        jcenter()
     }
     dependencies {
-       classpath 'com.github.jengelman.gradle.plugins:gradle-processes:0.2'
+       classpath 'com.github.jengelman.gradle.plugins:gradle-processes:0.3.0'
     }
 }
 ```
@@ -30,7 +30,7 @@ buildscript {
 Second, apply the plugin to your Gradle build:
 
 ```
-apply plugin: 'processes'
+apply plugin: 'com.github.johnrengelman.processes'
 ```
 
 Capabilities

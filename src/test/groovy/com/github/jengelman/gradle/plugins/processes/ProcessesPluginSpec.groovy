@@ -27,7 +27,7 @@ class ProcessesPluginSpec extends Specification {
         project = ProjectBuilder.builder().build()
 
         when:
-        project.plugins.apply('processes')
+        project.plugins.apply('com.github.johnrengelman.processes')
 
         then:
         assert project.plugins.hasPlugin(ProcessesPlugin)
