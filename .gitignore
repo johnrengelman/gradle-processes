@@ -45,6 +45,7 @@
 *.iml
 .idea
 
+out/
 build/
 .gradle
 .gradle-test-kit/

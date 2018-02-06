@@ -29,6 +29,11 @@ class Fork extends ConventionTask implements ExecSpec {
     }
 
     @Override
+    void setCommandLine(List<String> list) {
+        forkAction.setCommandLine(list)
+    }
+
+    @Override
     void setCommandLine(Object... objects) {
         forkAction.setCommandLine(objects)
     }
@@ -59,6 +64,12 @@ class Fork extends ConventionTask implements ExecSpec {
     @Override
     Fork args(Iterable<?> objects) {
         forkAction.args(objects)
+        return this
+    }
+
+    @Override
+    Fork setArgs(List<String> list) {
+        forkAction.setArgs(list)
         return this
     }
 
@@ -128,6 +139,11 @@ class Fork extends ConventionTask implements ExecSpec {
     }
 
     @Override
+    void setExecutable(String s) {
+        forkAction.setExecutable(s)
+    }
+
+    @Override
     void setExecutable(Object o) {
         forkAction.setExecutable(o)
     }
@@ -141,6 +157,11 @@ class Fork extends ConventionTask implements ExecSpec {
     @Override
     File getWorkingDir() {
         return forkAction.workingDir
+    }
+
+    @Override
+    void setWorkingDir(File file) {
+        forkAction.setWorkingDir(file)
     }
 
     @Override

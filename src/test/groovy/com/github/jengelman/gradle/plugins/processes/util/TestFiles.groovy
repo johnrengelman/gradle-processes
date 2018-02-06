@@ -2,7 +2,7 @@ package com.github.jengelman.gradle.plugins.processes.util
 
 import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.file.IdentityFileResolver
-import org.gradle.internal.nativeplatform.services.NativeServices
+import org.gradle.internal.nativeintegration.services.NativeServices
 import org.gradle.internal.nativeplatform.filesystem.FileSystem
 
 class TestFiles {

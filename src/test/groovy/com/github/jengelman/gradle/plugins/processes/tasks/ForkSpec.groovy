@@ -5,7 +5,7 @@ import com.github.jengelman.gradle.plugins.processes.ProcessHandleListener
 import com.github.jengelman.gradle.plugins.processes.ProcessesPlugin
 import com.github.jengelman.gradle.plugins.processes.util.PluginSpecification
 import org.gradle.process.ExecResult
-import org.gradle.testkit.functional.ExecutionResult
+import org.gradle.testkit.runner.BuildResult
 
 class ForkSpec extends PluginSpecification {
 
@@ -47,7 +47,7 @@ class ForkSpec extends PluginSpecification {
 
         when:
         runner.arguments << 'forkMain'
-        ExecutionResult result = runner.run()
+        BuildResult result = runner.run()
 
         then:
         assert result.standardOutput.contains('Process completed')

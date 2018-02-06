@@ -1,7 +1,6 @@
 package com.github.jengelman.gradle.plugins.processes.util
 
-import org.gradle.testkit.functional.GradleRunner
-import org.gradle.testkit.functional.GradleRunnerFactory
+import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -12,8 +11,7 @@ class PluginSpecification extends Specification {
     GradleRunner runner
 
     def setup() {
-        runner = GradleRunnerFactory.create()
-        runner.directory = dir.root
+        runner = GradleRunner.create().withProjectDir(dir.root)
     }
 
     File getBuildFile() {

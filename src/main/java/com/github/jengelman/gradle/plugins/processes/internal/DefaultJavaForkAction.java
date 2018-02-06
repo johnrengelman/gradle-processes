@@ -8,10 +8,12 @@ import org.gradle.api.internal.file.FileResolver;
 import org.gradle.process.internal.ExecHandle;
 import org.gradle.process.internal.JavaExecHandleBuilder;
 
+import java.util.concurrent.Executor;
+
 public class DefaultJavaForkAction extends JavaExecHandleBuilder implements JavaForkAction {
 
-    public DefaultJavaForkAction(FileResolver fileResolver) {
-        super(fileResolver);
+    public DefaultJavaForkAction(FileResolver fileResolver, Executor executor) {
+        super(fileResolver, executor);
     }
 
     public ProcessHandle fork() {
