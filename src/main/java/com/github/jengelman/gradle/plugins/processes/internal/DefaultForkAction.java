@@ -5,6 +5,7 @@ import static com.github.jengelman.gradle.plugins.processes.internal.ExecHandleW
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle;
 import com.github.jengelman.gradle.plugins.processes.ProcessHandleListener;
 import org.gradle.api.internal.file.FileResolver;
+import org.gradle.internal.file.PathToFileResolver;
 import org.gradle.process.internal.DefaultExecHandleBuilder;
 import org.gradle.process.internal.ExecException;
 import org.gradle.process.internal.ExecHandle;
@@ -14,8 +15,8 @@ import java.util.concurrent.Executor;
 
 public class DefaultForkAction extends DefaultExecHandleBuilder implements ForkAction {
 
-    public DefaultForkAction(FileResolver fileResolver, Executor executor) {
-        super(fileResolver, executor);
+    public DefaultForkAction(PathToFileResolver pathToFileResolver, Executor executor) {
+        super(pathToFileResolver, executor);
     }
 
     public ProcessHandle fork() throws ExecException {

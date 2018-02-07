@@ -4,6 +4,7 @@ import com.github.jengelman.gradle.plugins.processes.MultipleProcessException
 import com.github.jengelman.gradle.plugins.processes.ProcessOperations
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import org.gradle.api.Action
+import org.gradle.api.internal.file.FileOperations
 import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.ProcessOperations as GradleProcessOperations
 import org.gradle.internal.concurrent.DefaultExecutorFactory
@@ -86,12 +87,12 @@ class DefaultProcessOperations implements ProcessOperations {
 
     @Override
     ForkAction newForkAction() {
-        return new DefaultForkAction(fileResolver)
+        return new DefaultForkAction(fileResolver, executor())
     }
 
     @Override
     JavaForkAction newJavaForkAction() {
-        return new DefaultJavaForkAction(fileResolver)
+        return new DefaultJavaForkAction(fileResolver, executor())
     }
 
     @Override
