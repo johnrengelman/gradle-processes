@@ -11,16 +11,27 @@ Compatibility Notes
 
 This updated version of the plugin is tested against Gradle versions _4.5 onwards (final versions only)_.
 
+Due to internal gradle API changes (some of which this plugin uses) you have to use the older version 0.3.0 of
+the plugin on gradle version < 4.5!
+
 How To Use
 ----------
 
-Apply the plugin to your Gradle build:
+*Starting from gradle 4.5*: Apply the plugin to your Gradle build:
 
 ```groovy
 plugins {
     id 'com.github.johnrengelman.processes' // TODO add version
 }
 ```
+
+*If using a version prior to gradle 4.5*: Apply the plugin to your Gradle build:
+```groovy
+plugins {
+    id "com.github.johnrengelman.processes" version "0.3.0"
+}
+```
+
 
 Capabilities
 ------------
