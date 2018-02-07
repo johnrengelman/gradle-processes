@@ -9,28 +9,17 @@ bolster the built in capabilities of Gradle which allow for processing forking o
 Compatibility Notes
 -------------------
 
-This plugin is tested against Gradle versions 1.8 - 1.11 (final versions only).
+This updated version of the plugin is tested against Gradle versions _4.5 onwards (final versions only)_.
 
 How To Use
 ----------
 
-First, add the BinTray JCenter repository and the plugin library to your build's buildscript.
+Apply the plugin to your Gradle build:
 
-```
-buildscript {
-    respositories {
-       jcenter()
-    }
-    dependencies {
-       classpath 'com.github.jengelman.gradle.plugins:gradle-processes:0.3.0'
-    }
+```groovy
+plugins {
+    id 'com.github.johnrengelman.processes' // TODO add version
 }
-```
-
-Second, apply the plugin to your Gradle build:
-
-```
-apply plugin: 'com.github.johnrengelman.processes'
 ```
 
 Capabilities
@@ -50,13 +39,13 @@ ProcessHandle handle = project.procs.javafork {
 
 ### Process Joining
 
-```
+```groovy
 project.procs.waitForFinish(handle)
 ```
 
 ### Handling Multiple Processes
 
-```
+```groovy
 ProcessHandle handle = project.procs.javafork { ... }
 ProcessHandle handle2 = project.procs.javafork { ... }
 project.procs.waitForFinish([handle, handle2])
@@ -64,7 +53,7 @@ project.procs.waitForFinish([handle, handle2])
 
 ### Forking Tasks
 
-```
+```groovy
 task fork(type: Fork) {
   // Configure the same as the Exec task
 }
@@ -76,7 +65,7 @@ task javafork(type: JavaFork) {
 
 ### Accessing a Forked Tasks Process
 
-```
+```groovy
 task fork(type: Fork) {
   // Configure task
 }
@@ -88,7 +77,7 @@ task waitForFork() << {
 
 Using the forked tasks can allow for starting/stopping processes for things like test infrastructure.
 
-```
+```groovy
 task startServer(type: Fork) {
   // Start some external service
 }
@@ -101,3 +90,10 @@ test.dependsOn startServer
 test.finalizedBy stopServer
 ```
 
+# Building the plugin
+
+This should build everything and run the tests:
+
+```bash
+./gradlew build
+```
