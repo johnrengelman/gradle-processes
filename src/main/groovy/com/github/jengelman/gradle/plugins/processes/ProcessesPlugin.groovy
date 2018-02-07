@@ -17,6 +17,8 @@ import javax.inject.Inject
  */
 class ProcessesPlugin implements Plugin<Project> {
 
+    static final String IDENTIFIER = "com.github.johnrengelman.processes"
+
     static final String PROCESSES_EXTENSION = 'procs'
 
     ProcessOperations processApi
