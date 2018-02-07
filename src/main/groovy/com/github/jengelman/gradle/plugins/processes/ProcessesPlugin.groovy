@@ -1,11 +1,13 @@
 package com.github.jengelman.gradle.plugins.processes
 
 import com.github.jengelman.gradle.plugins.processes.internal.DefaultProcessOperations
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.ProcessOperations as GradleProcessOperations
 import org.gradle.internal.reflect.Instantiator
+import org.gradle.util.GradleVersion
 
 import javax.inject.Inject
 
@@ -30,6 +32,10 @@ class ProcessesPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        if(GradleVersion.current() < GradleVersion.version("4.5")) {
+            throw new GradleException("This version of the plugin is incompatible with gradle < 4.5! Use version 0.3.0 for now.")
+        }
+
         project.extensions.create(PROCESSES_EXTENSION, ProcessesExtension, processApi)
     }
 }
