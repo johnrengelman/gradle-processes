@@ -5,18 +5,12 @@ import com.github.jengelman.gradle.plugins.processes.ProcessHandleListener
 import com.github.jengelman.gradle.plugins.processes.ProcessesPlugin
 import com.github.jengelman.gradle.plugins.processes.util.PluginSpecification
 import org.gradle.process.ExecResult
-import org.gradle.testkit.functional.ExecutionResult
+import org.gradle.testkit.runner.BuildResult
 
 class ForkSpec extends PluginSpecification {
 
-    def setup() {
-        buildFile << """
-        apply plugin: ${ProcessesPlugin.name}
-        """
-    }
-
     @SuppressWarnings('Println')
-    def forkTask() {
+    def "should be able to  run a fork task"() {
         given:
         File testFile = file('someFile')
 
@@ -46,12 +40,11 @@ class ForkSpec extends PluginSpecification {
         """
 
         when:
-        runner.arguments << 'forkMain'
-        ExecutionResult result = runner.run()
+        BuildResult result = runner.withArguments('forkMain').build()
 
         then:
-        assert result.standardOutput.contains('Process completed')
-        assert result.standardOutput.contains('Execution Started')
-        assert result.standardOutput.contains('Execution Finished')
+        assert result.output.contains('Process completed')
+        assert result.output.contains('Execution Started')
+        assert result.output.contains('Execution Finished')
     }
 }

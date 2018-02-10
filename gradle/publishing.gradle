@@ -1,4 +1,3 @@
-apply plugin: 'bintray'
 apply plugin: 'maven-publish'
 
 def pomConfig = {
@@ -14,6 +13,11 @@ def pomConfig = {
             id 'jengelman'
             name 'John Engelman'
             email 'john.r.engelman@gmail.com'
+        }
+        developer {
+            id 'kungfoo'
+            name 'Silvio Heuberger'
+            email 'silvio.heuberger@gmail.com'
         }
     }
 }
@@ -33,24 +37,3 @@ publishing {
         }
     }
 }
-
-bintrayUpload { task ->
-    dependsOn project.publishing.publications.plugin.artifacts
-    gradle.taskGraph.whenReady { taskGraph ->
-        if (taskGraph.hasTask(task)) {
-            task.user = bintrayUser
-            task.apiKey = bintrayKey
-        }
-    }
-}
-
-bintray {
-    publications = ['plugin']
-    pkg {
-        repo = 'gradle-plugins'
-        name = 'gradle-process-plugin'
-        licenses = ['Apache-2.0']
-    }
-}
-
-task install(dependsOn: publishToMavenLocal)

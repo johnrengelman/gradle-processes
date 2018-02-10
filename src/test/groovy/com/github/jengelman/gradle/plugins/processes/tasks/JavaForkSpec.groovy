@@ -7,21 +7,16 @@ import com.github.jengelman.gradle.plugins.processes.util.PluginSpecification
 import com.github.jengelman.gradle.plugins.processes.util.TestMain
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.process.ExecResult
-import org.gradle.testkit.functional.ExecutionResult
+import org.gradle.testkit.runner.BuildResult
 
 class JavaForkSpec extends PluginSpecification {
 
-    def setup() {
-        buildFile << """
-        apply plugin: ${ProcessesPlugin.name}
-        """
-    }
-
     @SuppressWarnings(['Println', 'ClosureAsLastMethodParameter'])
-    def forkTask() {
+    def "should be able to run a java fork task"() {
         given:
         File testFile = file('someFile')
-        List<URL> files = ClasspathUtil.getClasspath(this.class.classLoader)
+        List<URL> files = ClasspathUtil.getClasspath(this.class.classLoader).asURLs
+
         buildFile << """
         List cp = ${files.collect { 'new URL("' + it.toString() + '")' } }
         task javaForkMain(type: ${JavaFork.name}) {
@@ -49,12 +44,11 @@ class JavaForkSpec extends PluginSpecification {
         """
 
         when:
-        runner.arguments << 'javaForkMain'
-        ExecutionResult result = runner.run()
+        BuildResult result = runner.withArguments('javaForkMain').build()
 
         then:
-        assert result.standardOutput.contains('Process completed')
-        assert result.standardOutput.contains('Execution Started')
-        assert result.standardOutput.contains('Execution Finished')
+        assert result.output.contains('Process completed')
+        assert result.output.contains('Execution Started')
+        assert result.output.contains('Execution Finished')
     }
 }

@@ -15,7 +15,8 @@ class ProcessesPluginSpec extends Specification {
 
     private Project project
 
-    @Rule TemporaryFolder tmpDir
+    @Rule
+    TemporaryFolder tmpDir
 
     def setup() {
         project = ProjectBuilder.builder().build()
@@ -49,14 +50,9 @@ class ProcessesPluginSpec extends Specification {
     def 'fork a java process from the plugin extension'() {
         given:
         File testFile = tmpDir.newFile('someFile')
-        List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
-        ProcessHandle process = project.procs.javafork {
-            classpath(files as Object[])
-            main = TestMain.name
-            args testFile.absolutePath
-        }
+        ProcessHandle process = project.procs.javafork(javaConfiguration(testFile))
 
         then:
         process.state != null
@@ -72,14 +68,9 @@ class ProcessesPluginSpec extends Specification {
     def 'exec a java process from the plugin extension'() {
         given:
         File testFile = tmpDir.newFile('someFile')
-        List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
-        ExecResult result = project.procs.javaexec {
-            classpath(files as Object[])
-            main = TestMain.name
-            args testFile.absolutePath
-        }
+        ExecResult result = project.procs.javaexec(javaConfiguration(testFile))
 
         then:
         testFile.isFile()
@@ -91,11 +82,7 @@ class ProcessesPluginSpec extends Specification {
         File testFile = tmpDir.newFile('someFile')
 
         when:
-        ProcessHandle process = project.procs.fork {
-            executable = 'touch'
-            workingDir = tmpDir.root
-            args testFile.name
-        }
+        ProcessHandle process = project.procs.fork(execConfiguration(testFile))
 
         then:
         process.state != null
@@ -113,11 +100,7 @@ class ProcessesPluginSpec extends Specification {
         File testFile = tmpDir.newFile('someFile')
 
         when:
-        ExecResult result = project.procs.exec {
-            executable = 'touch'
-            workingDir = tmpDir.root
-            args testFile.name
-        }
+        ExecResult result = project.procs.exec(execConfiguration(testFile))
 
         then:
         testFile.isFile()
@@ -162,19 +145,10 @@ class ProcessesPluginSpec extends Specification {
         given:
         File testFile = tmpDir.newFile('someFile')
         File testFile2 = tmpDir.newFile('someFile2')
-        List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
-        ProcessHandle process = project.procs.javafork {
-            classpath(files as Object[])
-            main = TestMain.name
-            args testFile.absolutePath
-        }
-        ProcessHandle process2 = project.procs.javafork {
-            classpath(files as Object[])
-            main = TestMain.name
-            args testFile2.absolutePath
-        }
+        ProcessHandle process = project.procs.javafork(javaConfiguration(testFile))
+        ProcessHandle process2 = project.procs.javafork(javaConfiguration(testFile2))
 
         then:
         assert process.state != null
@@ -194,14 +168,9 @@ class ProcessesPluginSpec extends Specification {
     def 'wait for multiple forked java processes to complete with ignored exit should not throw exception'() {
         given:
         File testFile = tmpDir.newFile('someFile')
-        List files = ClasspathUtil.getClasspath(this.class.classLoader)
 
         when:
-        ProcessHandle process = project.procs.javafork {
-            classpath(files as Object[])
-            main = TestMain.name
-            args testFile.absolutePath
-        }
+        ProcessHandle process = project.procs.javafork(javaConfiguration(testFile))
         ProcessHandle process2 = project.procs.javafork {
             main = 'org.gradle.UnknownMain'
             ignoreExitValue = true
@@ -218,5 +187,22 @@ class ProcessesPluginSpec extends Specification {
         assert testFile.isFile()
         assert results[0].exitValue == 0
         assert results[1].exitValue != 0
+    }
+
+    private Closure javaConfiguration(File testFile) {
+        List<File> _classpath = ClasspathUtil.getClasspath(this.class.classLoader).asFiles
+        return {
+            classpath(_classpath)
+            main = TestMain.name
+            args testFile.absolutePath
+        }
+    }
+
+    private Closure execConfiguration(File testFile) {
+        return {
+            executable = 'touch'
+            workingDir = tmpDir.root
+            args testFile.name
+        }
     }
 }

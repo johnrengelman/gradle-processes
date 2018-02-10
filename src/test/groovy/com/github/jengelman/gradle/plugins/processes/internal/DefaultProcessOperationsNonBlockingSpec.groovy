@@ -5,10 +5,8 @@ import com.github.jengelman.gradle.plugins.processes.ProcessHandleListener
 import com.github.jengelman.gradle.plugins.processes.util.TestFiles
 import com.github.jengelman.gradle.plugins.processes.util.TestMain
 import com.github.jengelman.gradle.plugins.processes.util.WaitTestMain
-import org.gradle.api.internal.file.DefaultFileOperations
 import org.gradle.internal.classloader.ClasspathUtil
 import org.gradle.internal.reflect.DirectInstantiator
-import org.gradle.internal.reflect.Instantiator
 import org.gradle.process.ExecResult
 import org.gradle.process.internal.ExecException
 import org.gradle.process.internal.ExecHandleState
@@ -18,24 +16,22 @@ import spock.lang.Specification
 
 class DefaultProcessOperationsNonBlockingSpec extends Specification {
 
-    private final Instantiator instantiator = new DirectInstantiator()
-
     private DefaultProcessOperations processOperations
     
     @Rule TemporaryFolder tmpDir
 
     def setup() {
-        processOperations = new DefaultProcessOperations(instantiator, resolver(), fileOps())
+        processOperations = new DefaultProcessOperations(DirectInstantiator.INSTANCE, TestFiles.resolver(tmpDir.root), TestFiles.fileOperations(tmpDir.root))
     }
 
-    def javafork() {
+    def "java fork should be able to touch a file"() {
         given:
         File testFile = tmpDir.newFile('someFile')
-        List files = ClasspathUtil.getClasspath(this.class.classLoader)
+        List<File> files = ClasspathUtil.getClasspath(this.class.classLoader).asFiles
 
         when:
         ProcessHandle process = processOperations.javafork {
-            classpath(files as Object[])
+            classpath(files)
             main = TestMain.name
             args testFile.absolutePath
         }
@@ -51,7 +47,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         result.exitValue == 0
     }
 
-    def javaforkWithNonZeroExitValueShouldThrowException() {
+    def "java fork with non-zero exit result should throw an exception"() {
         when:
         ProcessHandle process = processOperations.javafork {
             main = 'org.gradle.UnknownMain'
@@ -70,7 +66,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         thrown(ExecException)
     }
 
-    def javaforkWithNonZeroExitValueAndIgnoreExitValueShouldNotThrowException() {
+    def "java fork with non-zero exit result and ignored exit value should NOT throw an exception"() {
         when:
         ProcessHandle process = processOperations.javafork {
             main = 'org.gradle.UnknownMain'
@@ -87,7 +83,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         result.exitValue != 0
     }
 
-    def fork() {
+    def "fork should be able to touch a file"() {
         given:
         File testFile = tmpDir.newFile('someFile')
 
@@ -109,7 +105,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         result.exitValue == 0
     }
 
-    def execWithNonZeroExitValueShouldThrowException() {
+    def  "fork with non-zero exit result should throw an exception"() {
         when:
         ProcessHandle process = processOperations.fork {
             executable = 'touch'
@@ -130,7 +126,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         thrown(ExecException)
     }
 
-    def execWithNonZeroExitValueAndIgnoreExitValueShouldNotThrowException() {
+    def "fork with non-zero exit result and ignored exit value should NOT throw an exception"() {
         when:
         ProcessHandle process = processOperations.fork {
             ignoreExitValue = true
@@ -149,7 +145,7 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         result.exitValue != 0
     }
 
-    def listenToFork() {
+    def "fork listener should be able to listen to forked process"() {
         given:
         File testFile = tmpDir.newFile('someFile')
         boolean startedCalled = false
@@ -180,16 +176,16 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         assert finishedCalled
     }
 
-    def listenToJavaFork() {
+    def "java fork listener should be able to listen to a forked java process"() {
         given:
         File testFile = tmpDir.newFile('someFile')
-        List files = ClasspathUtil.getClasspath(this.class.classLoader)
+        List<File> files = ClasspathUtil.getClasspath(this.class.classLoader).asFiles
         boolean startedCalled = false
         boolean finishedCalled = false
 
         when:
         ProcessHandle process = processOperations.javafork {
-            classpath(files as Object[])
+            classpath(files)
             main = TestMain.name
             args testFile.absolutePath
             listener new ProcessHandleListener() {
@@ -212,13 +208,13 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         assert finishedCalled
     }
 
-    def abortProcess() {
+    def "it should be possible to abort a stuck process"() {
         given:
-        List files = ClasspathUtil.getClasspath(this.class.classLoader)
+        List<File> files = ClasspathUtil.getClasspath(this.class.classLoader).asFiles
 
         when:
         ProcessHandle process = processOperations.javafork {
-            classpath(files as Object[])
+            classpath(files)
             main = WaitTestMain.name
         }
 
@@ -229,15 +225,8 @@ class DefaultProcessOperationsNonBlockingSpec extends Specification {
         process.abort()
 
         then:
-        process.state == ExecHandleState.STARTED //TODO This doesn't get set to ABORTED by Gradle core
+        process.state == ExecHandleState.ABORTED
         process.waitForFinish().exitValue != 0
     }
 
-    def resolver() {
-        return TestFiles.resolver(tmpDir.root)
-    }
-
-    private DefaultFileOperations fileOps() {
-        new DefaultFileOperations(resolver(), null, null, instantiator)
-    }
 }
