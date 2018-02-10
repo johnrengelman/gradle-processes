@@ -5,6 +5,10 @@ import com.github.jengelman.gradle.plugins.processes.ProcessHandleListener
 import com.github.jengelman.gradle.plugins.processes.ProcessesExtension
 import com.github.jengelman.gradle.plugins.processes.internal.ForkAction
 import org.gradle.api.internal.ConventionTask
+import org.gradle.api.tasks.Console
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecSpec
 import org.gradle.process.ProcessForkOptions
@@ -80,6 +84,7 @@ class Fork extends ConventionTask implements ExecSpec {
     }
 
     @Override
+    @Input
     List<String> getArgs() {
         return forkAction.args
     }
@@ -91,6 +96,7 @@ class Fork extends ConventionTask implements ExecSpec {
     }
 
     @Override
+    @Input
     boolean isIgnoreExitValue() {
         return forkAction.ignoreExitValue
     }
@@ -102,6 +108,7 @@ class Fork extends ConventionTask implements ExecSpec {
     }
 
     @Override
+    @Console
     InputStream getStandardInput() {
         return forkAction.standardInput
     }
@@ -113,6 +120,7 @@ class Fork extends ConventionTask implements ExecSpec {
     }
 
     @Override
+    @Console
     OutputStream getStandardOutput() {
         return forkAction.standardOutput
     }
@@ -124,16 +132,19 @@ class Fork extends ConventionTask implements ExecSpec {
     }
 
     @Override
+    @Console
     OutputStream getErrorOutput() {
         return forkAction.errorOutput
     }
 
     @Override
+    @Input
     List<String> getCommandLine() {
         return forkAction.commandLine
     }
 
     @Override
+    @Input
     String getExecutable() {
         return forkAction.executable
     }
@@ -155,6 +166,7 @@ class Fork extends ConventionTask implements ExecSpec {
     }
 
     @Override
+    @InputDirectory
     File getWorkingDir() {
         return forkAction.workingDir
     }
@@ -176,6 +188,7 @@ class Fork extends ConventionTask implements ExecSpec {
     }
 
     @Override
+    @Input
     Map<String, Object> getEnvironment() {
         return forkAction.environment
     }
@@ -207,6 +220,7 @@ class Fork extends ConventionTask implements ExecSpec {
         this.forkAction = action
     }
 
+    @Internal
     ProcessHandle getProcessHandle() {
         return this.processHandle
     }

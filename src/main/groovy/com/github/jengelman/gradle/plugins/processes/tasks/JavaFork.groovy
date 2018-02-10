@@ -7,6 +7,11 @@ import com.github.jengelman.gradle.plugins.processes.internal.ForkAction
 import com.github.jengelman.gradle.plugins.processes.internal.JavaForkAction
 import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.ConventionTask
+import org.gradle.api.tasks.Console
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.gradle.process.JavaExecSpec
 import org.gradle.process.JavaForkOptions
@@ -34,6 +39,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     String getMain() {
         return forkAction.main
     }
@@ -45,6 +51,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     List<String> getArgs() {
         return forkAction.args
     }
@@ -79,6 +86,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @InputFiles
     FileCollection getClasspath() {
         return forkAction.classpath
     }
@@ -96,6 +104,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     boolean isIgnoreExitValue() {
         return forkAction.ignoreExitValue
     }
@@ -107,6 +116,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Console
     InputStream getStandardInput() {
         return forkAction.standardInput
     }
@@ -118,6 +128,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Console
     OutputStream getStandardOutput() {
         return forkAction.standardOutput
     }
@@ -129,16 +140,19 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Console
     OutputStream getErrorOutput() {
         return forkAction.errorOutput
     }
 
     @Override
+    @Input
     List<String> getCommandLine() {
         return forkAction.commandLine
     }
 
     @Override
+    @Input
     Map<String, Object> getSystemProperties() {
         return forkAction.systemProperties
     }
@@ -161,6 +175,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     String getDefaultCharacterEncoding() {
         return forkAction.defaultCharacterEncoding
     }
@@ -171,6 +186,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     String getMinHeapSize() {
         return forkAction.minHeapSize
     }
@@ -181,6 +197,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     String getMaxHeapSize() {
         return forkAction.maxHeapSize
     }
@@ -191,6 +208,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     List<String> getJvmArgs() {
         return forkAction.jvmArgs
     }
@@ -218,6 +236,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @InputFiles
     FileCollection getBootstrapClasspath() {
         return forkAction.bootstrapClasspath
     }
@@ -234,6 +253,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     boolean getEnableAssertions() {
         return forkAction.enableAssertions
     }
@@ -244,6 +264,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Console
     boolean getDebug() {
         return forkAction.debug
     }
@@ -254,6 +275,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     List<String> getAllJvmArgs() {
         return forkAction.allJvmArgs
     }
@@ -275,6 +297,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     String getExecutable() {
         return forkAction.executable
     }
@@ -296,6 +319,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @InputDirectory
     File getWorkingDir() {
         return forkAction.workingDir
     }
@@ -317,6 +341,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     }
 
     @Override
+    @Input
     Map<String, Object> getEnvironment() {
         return forkAction.environment
     }
@@ -348,7 +373,7 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
         this.forkAction = action
     }
 
-
+    @Internal
     ProcessHandle getProcessHandle() {
         return this.processHandle
     }

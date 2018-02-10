@@ -1,17 +1,17 @@
-
-apply plugin: 'groovy'
-apply plugin: 'java-gradle-plugin'
+plugins {
+    id 'com.gradle.plugin-publish' version '0.9.7'
+    id 'idea'
+    id 'groovy'
+    id 'java-gradle-plugin'
+}
 
 group = 'com.github.jengelman.gradle.plugins'
-version = '0.4.0-SNAPSHOT'
+version = '0.4.0'
 
 ext.isSnapshot = version.endsWith("SNAPSHOT")
 
 repositories {
     jcenter()
-    maven {
-        url 'http://dl.bintray.com/johnrengelman/gradle-plugins'
-    }
 }
 
 dependencies {
@@ -32,3 +32,16 @@ dependencies {
 
 targetCompatibility = 1.6
 sourceCompatibility = 1.6
+
+pluginBundle {
+    website = 'https://github.com/johnrengelman/gradle-processes'
+    vcsUrl = 'https://github.com/johnrengelman/gradle-processes.git'
+    plugins {
+        processes {
+            id = "com.github.johnrengelman.processes"
+            displayName = "Gradle Processes Plugin"
+            description = "Manage external processes during a Gradle build"
+            tags = ["process"]
+        }
+    }
+}
