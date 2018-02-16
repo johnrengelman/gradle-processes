@@ -41,7 +41,7 @@ pluginBundle {
             id = "com.github.johnrengelman.processes"
             displayName = "Gradle Processes Plugin"
             description = "Manage external processes during a Gradle build"
-            tags = ["process"]
+            tags = ["process", "fork", "join"]
         }
     }
 }
