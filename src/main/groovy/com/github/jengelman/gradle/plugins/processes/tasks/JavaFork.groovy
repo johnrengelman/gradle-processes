@@ -70,7 +70,8 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
 
     @Override
     JavaFork setArgs(List<String> list) {
-        return forkAction.setArgs(list)
+        forkAction.setArgs(list)
+        return this
     }
 
     @Override
