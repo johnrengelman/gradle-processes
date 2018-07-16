@@ -32,8 +32,8 @@ class ProcessesPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        if(GradleVersion.current() < GradleVersion.version("4.5")) {
-            throw new GradleException("This version of the plugin is incompatible with gradle < 4.5! Use version 0.3.0 for now.")
+        if(GradleVersion.current() < GradleVersion.version("4.6")) {
+            throw new GradleException("This version of the plugin is incompatible with gradle < 4.6! Use version 0.3.0 for now.")
         }
 
         project.extensions.create(PROCESSES_EXTENSION, ProcessesExtension, processApi)
