@@ -3,7 +3,6 @@ package com.github.jengelman.gradle.plugins.processes.tasks
 import com.github.jengelman.gradle.plugins.processes.ProcessHandle
 import com.github.jengelman.gradle.plugins.processes.ProcessHandleListener
 import com.github.jengelman.gradle.plugins.processes.ProcessesExtension
-import com.github.jengelman.gradle.plugins.processes.internal.ForkAction
 import com.github.jengelman.gradle.plugins.processes.internal.JavaForkAction
 import org.gradle.api.file.FileCollection
 import org.gradle.api.internal.ConventionTask
@@ -13,6 +12,7 @@ import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
+import org.gradle.process.CommandLineArgumentProvider
 import org.gradle.process.JavaExecSpec
 import org.gradle.process.JavaForkOptions
 import org.gradle.process.ProcessForkOptions
@@ -78,6 +78,11 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     JavaFork setArgs(Iterable<?> objects) {
         forkAction.setArgs(objects)
         return this
+    }
+
+    @Override
+    List<CommandLineArgumentProvider> getArgumentProviders() {
+        return forkAction.argumentProviders
     }
 
     @Override
@@ -234,6 +239,11 @@ class JavaFork extends ConventionTask implements JavaExecSpec {
     JavaFork jvmArgs(Object... objects) {
         forkAction.jvmArgs(objects)
         return this
+    }
+
+    @Override
+    List<CommandLineArgumentProvider> getJvmArgumentProviders() {
+        return forkAction.jvmArgumentProviders
     }
 
     @Override

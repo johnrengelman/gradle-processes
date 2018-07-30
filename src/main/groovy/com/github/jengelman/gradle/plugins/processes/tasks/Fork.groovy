@@ -10,6 +10,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
+import org.gradle.process.CommandLineArgumentProvider
 import org.gradle.process.ExecSpec
 import org.gradle.process.ProcessForkOptions
 
@@ -87,6 +88,11 @@ class Fork extends ConventionTask implements ExecSpec {
     @Input
     List<String> getArgs() {
         return forkAction.args
+    }
+
+    @Override
+    List<CommandLineArgumentProvider> getArgumentProviders() {
+        return forkAction.argumentProviders
     }
 
     @Override

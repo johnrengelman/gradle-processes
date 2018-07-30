@@ -40,7 +40,7 @@ class GradleVersionCompatibilitySpec extends PluginSpecification {
         assert result.output.contains('Process completed')
 
         where:
-        gradleVersion << ['4.5', '4.5.1']
+        gradleVersion << ['4.6', '4.7', '4.8', '4.8.1', '4.9']
     }
 
     @Unroll
@@ -54,10 +54,10 @@ class GradleVersionCompatibilitySpec extends PluginSpecification {
         then:
         def exception = thrown(UnexpectedBuildFailure)
 
-        assert exception.message.contains('This version of the plugin is incompatible with gradle < 4.5!')
+        assert exception.message.contains('This version of the plugin is incompatible with gradle < 4.6!')
 
         where:
-        gradleVersion << ['4.4.1', '3.5']
+        gradleVersion << ['4.5.1', '4.4.1', '3.5']
     }
 
 }
